@@ -1,0 +1,109 @@
+[gd_scene format=3 uid="uid://cj44ipdv8amgl"]
+
+[ext_resource type="Script" uid="uid://kkr3u7j1x0bf" path="res://Scripts/CardManager.gd" id="1_kln2b"]
+[ext_resource type="PackedScene" uid="uid://ccbat7p4yfpkj" path="res://Scenes/CardSlot.tscn" id="2_rgh2o"]
+[ext_resource type="Script" uid="uid://csijj676vy7oo" path="res://Scripts/PlayerHand.gd" id="3_pbw6q"]
+[ext_resource type="Script" uid="uid://cftmavb1wrcbv" path="res://Scripts/Deck.gd" id="4_pbw6q"]
+[ext_resource type="Texture2D" uid="uid://5ky4k553ju82" path="res://Assets/Cards/test.png" id="4_rgh2o"]
+[ext_resource type="Script" uid="uid://b4mnm1e5el0hr" path="res://Scripts/InputManager.gd" id="6_v1gob"]
+[ext_resource type="Script" uid="uid://c0odkcih2ic1x" path="res://Scripts/DealerHand.gd" id="7_jw32o"]
+[ext_resource type="Texture2D" uid="uid://kbcyneligrv7" path="res://Assets/Tarot-Related/yggdrasil-tree-background.png" id="8_50glp"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_r0du0"]
+size = Vector2(158, 222)
+
+[node name="Main" type="Node2D" unique_id=387918511]
+
+[node name="CardManager" type="Node2D" parent="." unique_id=1636810811]
+script = ExtResource("1_kln2b")
+
+[node name="CardSlot" parent="." unique_id=1774103265 instance=ExtResource("2_rgh2o")]
+position = Vector2(1664, 539)
+
+[node name="PlayerHand" type="Node2D" parent="." unique_id=1457863070]
+script = ExtResource("3_pbw6q")
+
+[node name="Deck" type="Node2D" parent="." unique_id=1600404299]
+position = Vector2(200, 550)
+script = ExtResource("4_pbw6q")
+
+[node name="Area2D" type="Area2D" parent="Deck" unique_id=1991463643]
+collision_layer = 8
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Deck/Area2D" unique_id=2092867785]
+position = Vector2(0, 1)
+shape = SubResource("RectangleShape2D_r0du0")
+
+[node name="Sprite2D" type="Sprite2D" parent="Deck" unique_id=1781504872]
+scale = Vector2(0.35, 0.35)
+texture = ExtResource("4_rgh2o")
+
+[node name="InputManager" type="Node2D" parent="." unique_id=513575812]
+script = ExtResource("6_v1gob")
+
+[node name="DealerHand" type="Node2D" parent="." unique_id=421266735]
+script = ExtResource("7_jw32o")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=649774623]
+
+[node name="HitButton" type="Button" parent="CanvasLayer" unique_id=495087887]
+offset_left = 1372.0
+offset_top = 553.0
+offset_right = 1546.0
+offset_bottom = 639.0
+pivot_offset = Vector2(85, 28)
+theme_override_font_sizes/font_size = 32
+text = "Hit"
+
+[node name="PlayerScoreLabel" type="Label" parent="CanvasLayer" unique_id=1940364145]
+offset_left = 662.0
+offset_top = 517.0
+offset_right = 793.0
+offset_bottom = 574.0
+theme_override_font_sizes/font_size = 32
+text = "PlayerScoreLabel"
+
+[node name="DealerScoreLabel" type="Label" parent="CanvasLayer" unique_id=272651726]
+offset_left = 663.0
+offset_top = 455.0
+offset_right = 787.0
+offset_bottom = 507.0
+theme_override_font_sizes/font_size = 32
+text = "DealerScoreLabel"
+
+[node name="WagerAmtLabel" type="Label" parent="CanvasLayer" unique_id=292718854]
+offset_left = 1419.0
+offset_top = 750.0
+offset_right = 1662.0
+offset_bottom = 919.0
+theme_override_font_sizes/font_size = 32
+text = "WagerAmtLabel
+"
+
+[node name="ResultLabel" type="Label" parent="CanvasLayer" unique_id=478557078]
+offset_left = 561.0
+offset_top = 428.0
+offset_right = 1277.0
+offset_bottom = 657.0
+theme_override_font_sizes/font_size = 64
+text = "ResultLabel"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StandButton" type="Button" parent="CanvasLayer" unique_id=4822314]
+offset_left = 1372.0
+offset_top = 455.0
+offset_right = 1545.0
+offset_bottom = 542.0
+theme_override_font_sizes/font_size = 32
+text = "Stand"
+
+[node name="Background" type="Sprite2D" parent="." unique_id=668148586]
+visible = false
+show_behind_parent = true
+light_mask = 2
+visibility_layer = 2
+z_index = -10
+position = Vector2(961, 539)
+texture = ExtResource("8_50glp")
