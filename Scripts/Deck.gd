@@ -4,11 +4,14 @@ const CARD_SCENE_PATH = 'res://Scenes/Card.tscn'
 var card_database_reference
 var dealer_hand = []
 var dealer_hidden_card = null #tracks face down cards
+var score_manager_reference  # new because of ScoreManager
+
 
 #var player_deck = ['Cups01', 'Cups02', 'Cups03'] #when done manually, not anymore
 
 const MAX_HAND_SIZE = 5 # subject to change
 const DEALER_Y_POSITION = 200
+
 
 #signal hit
 
@@ -18,7 +21,7 @@ func _ready() -> void:
 	# meant to connect the signal to the actual function
 	$"../CanvasLayer/HitButton".pressed.connect(on_hit_button_pressed)
 	$"../CanvasLayer/StandButton".pressed.connect(on_stand_button_pressed)
-
+	score_manager_reference = $"../ScoreManager"  # ← new
 	card_database_reference = preload('res://Scripts/CardDatabase.gd')
 	deal_initial_hand()
 	#print(get_parent().get_children())  # see what nodes are actually at that level
@@ -27,11 +30,7 @@ func _ready() -> void:
 	#pass # Replace with function body.
 
 func deal_initial_hand():
-	#draw_card_initial($"../PlayerHand")
-	#draw_card_initial($"../PlayerHand")
-	print("Player hand dealt")
-	#draw_card_initial($"../DealerHand")
-	#draw_card_initial($"../DealerHand")
+	print("Initial hands dealt")
 	draw_card_to_dealer(false)
 	draw_card_to_player()
 	draw_card_to_dealer(true)
@@ -67,13 +66,14 @@ func deal_initial_hand():
 	#hand.add_card_to_hand(new_card)
 
 func draw_card_to_player():
+	print("score_manager_reference: ", score_manager_reference)
 	if $"../PlayerHand".hand.size() >= MAX_HAND_SIZE:
 		return
 	var card_data = CardDatabase.draw_card_db()
 	var new_card = create_card(card_data)
 	$"../PlayerHand".add_card_to_hand(new_card)
-	update_score_display()
-	check_bust()
+	score_manager_reference.update_score_display()
+	score_manager_reference.check_bust()
 
 func draw_card_to_dealer(face_down: bool):
 	var card_data = CardDatabase.draw_card_db()
@@ -84,7 +84,7 @@ func draw_card_to_dealer(face_down: bool):
 		dealer_hidden_card = new_card
 	dealer_hand.append(new_card)
 	update_dealer_positions()
-	update_score_display()
+	score_manager_reference.update_score_display()
 
 '''
 	draw_card()
@@ -158,49 +158,6 @@ func reveal_dealer_hand():
 		card.get_node("Sprite2D").texture = load(card.card_data.texture_path)
 		card.is_face_down = false
 
-'''
-	scoring logic
-	we use the map we already have in CardDatabase and just add some rules
-'''
-
-func calculate_score(hand: Array) -> int:
-	var score = 0
-	var aces = 0
-		
-	for card in hand:
-		if card.is_face_down:
-			continue
-		score += card.card_data.value
-		if card.card_data["name"] == "Ace":
-			aces += 1
-	
-	#downgrade aces from 11 to 1 if busting
-	while score > 21 and aces > 0:
-		score -= 10
-		aces -= 1
-	
-	#returns final score
-	return score
-	
-func update_score_display():
-	var player_score = calculate_score($"../PlayerHand".hand)
-	$"../CanvasLayer/PlayerScoreLabel".text = "Player: %d" % player_score
-	# dealer score only counts face-up cards, handled by is_face_down check above
-	var dealer_score = calculate_score(dealer_hand)
-	$"../CanvasLayer/DealerScoreLabel".text = "Dealer: %d" % dealer_score
-	
-'''
-	check_bust()
-	-literally checks for a bust
-
-	utilizes the end_game() method which actually outputs the message
-'''
-
-func check_bust():
-	var player_score = calculate_score($"../PlayerHand".hand)
-	if player_score > 21:
-		print("Player Bust")
-		end_game("Dealer Wins! Player busted.")
 
 
 '''
@@ -218,39 +175,11 @@ func on_stand_button_pressed():
 func stand():
 	print("Player stands.")
 	reveal_dealer_hand()
-	update_score_display()
+	score_manager_reference.update_score_display()
 	run_dealer_logic()
 	
 func run_dealer_logic():
-	while calculate_score(dealer_hand) < 17:
+	while score_manager_reference.calculate_score(dealer_hand) < 17:
 		draw_card_to_dealer(false) #face up
-	update_score_display()
-	determine_winner()
-
-'''
-	Game Management (should probably put this in another script tbh)
-'''
-
-func determine_winner():
-	var player_score = calculate_score($"../PlayerHand".hand)
-	var dealer_score = calculate_score(dealer_hand)
-	
-	if dealer_score > 21:
-		end_game("Player wins! Dealer busted.")
-	elif player_score > dealer_score:
-		end_game("Player wins!")
-	elif dealer_score > player_score:
-		end_game("Dealer wins!")
-	else:
-		end_game("Push! It's a tie.")
-
-func end_game(message: String):
-	print(message)
-	$"../CanvasLayer/ResultLabel".text = message
-	$"../CanvasLayer/PlayerScoreLabel".visible = false
-	$"../CanvasLayer/DealerScoreLabel".visible = false
-	$"../CanvasLayer/HitButton".disabled = true
-	$"../CanvasLayer/StandButton".disabled = true
-	
-func restart():
-	pass
+	score_manager_reference.update_score_display()
+	score_manager_reference.determine_winner()

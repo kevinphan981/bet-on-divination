@@ -59,8 +59,7 @@ func remove_card_from_hand(card):
 	if card in hand:
 		hand.erase(card)
 		update_hand_positions()
-	
-#
+
 ## Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta: float) -> void:
 	#pass

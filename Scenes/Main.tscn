@@ -8,11 +8,20 @@
 [ext_resource type="Script" uid="uid://b4mnm1e5el0hr" path="res://Scripts/InputManager.gd" id="6_v1gob"]
 [ext_resource type="Script" uid="uid://c0odkcih2ic1x" path="res://Scripts/DealerHand.gd" id="7_jw32o"]
 [ext_resource type="Texture2D" uid="uid://kbcyneligrv7" path="res://Assets/Tarot-Related/yggdrasil-tree-background.png" id="8_50glp"]
+[ext_resource type="PackedScene" uid="uid://ckpov4473ycw4" path="res://Scenes/PauseMenu.tscn" id="9_vy5pj"]
+[ext_resource type="Script" uid="uid://b1ois8s25wwe2" path="res://Scripts/GameManager.gd" id="10_bmxlf"]
+[ext_resource type="Script" uid="uid://bkbn073n0btxq" path="res://Scripts/ScoreManager.gd" id="11_4kpch"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r0du0"]
 size = Vector2(158, 222)
 
 [node name="Main" type="Node2D" unique_id=387918511]
+
+[node name="GameManager" type="Node" parent="." unique_id=1993771374]
+script = ExtResource("10_bmxlf")
+
+[node name="ScoreManager" type="Node" parent="." unique_id=963629313]
+script = ExtResource("11_4kpch")
 
 [node name="CardManager" type="Node2D" parent="." unique_id=1636810811]
 script = ExtResource("1_kln2b")
@@ -35,7 +44,7 @@ collision_mask = 8
 position = Vector2(0, 1)
 shape = SubResource("RectangleShape2D_r0du0")
 
-[node name="Sprite2D" type="Sprite2D" parent="Deck" unique_id=1781504872]
+[node name="CardBack" type="Sprite2D" parent="Deck" unique_id=1781504872]
 scale = Vector2(0.35, 0.35)
 texture = ExtResource("4_rgh2o")
 
@@ -56,22 +65,6 @@ pivot_offset = Vector2(85, 28)
 theme_override_font_sizes/font_size = 32
 text = "Hit"
 
-[node name="PlayerScoreLabel" type="Label" parent="CanvasLayer" unique_id=1940364145]
-offset_left = 662.0
-offset_top = 517.0
-offset_right = 793.0
-offset_bottom = 574.0
-theme_override_font_sizes/font_size = 32
-text = "PlayerScoreLabel"
-
-[node name="DealerScoreLabel" type="Label" parent="CanvasLayer" unique_id=272651726]
-offset_left = 663.0
-offset_top = 455.0
-offset_right = 787.0
-offset_bottom = 507.0
-theme_override_font_sizes/font_size = 32
-text = "DealerScoreLabel"
-
 [node name="WagerAmtLabel" type="Label" parent="CanvasLayer" unique_id=292718854]
 offset_left = 1419.0
 offset_top = 750.0
@@ -81,11 +74,41 @@ theme_override_font_sizes/font_size = 32
 text = "WagerAmtLabel
 "
 
+[node name="ScoreContainer" type="VBoxContainer" parent="CanvasLayer" unique_id=1727651574]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -346.0
+offset_top = -48.0
+offset_right = -76.0
+offset_bottom = 46.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="DealerScoreLabel" type="Label" parent="CanvasLayer/ScoreContainer" unique_id=272651726]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "DealerScoreLabel"
+
+[node name="PlayerScoreLabel" type="Label" parent="CanvasLayer/ScoreContainer" unique_id=1940364145]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "PlayerScoreLabel"
+
 [node name="ResultLabel" type="Label" parent="CanvasLayer" unique_id=478557078]
-offset_left = 561.0
-offset_top = 428.0
-offset_right = 1277.0
-offset_bottom = 657.0
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -358.0
+offset_top = -114.5
+offset_right = 358.0
+offset_bottom = 114.5
+grow_horizontal = 2
+grow_vertical = 2
 theme_override_font_sizes/font_size = 64
 text = "ResultLabel"
 horizontal_alignment = 1
@@ -98,6 +121,14 @@ offset_right = 1545.0
 offset_bottom = 542.0
 theme_override_font_sizes/font_size = 32
 text = "Stand"
+
+[node name="PauseMenu" parent="CanvasLayer" unique_id=333560685 instance=ExtResource("9_vy5pj")]
+process_mode = 3
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
 
 [node name="Background" type="Sprite2D" parent="." unique_id=668148586]
 visible = false
