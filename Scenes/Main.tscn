@@ -130,6 +130,18 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 
+[node name="WagerUpButton" type="Button" parent="CanvasLayer" unique_id=1365185249]
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="WagerDownButton" type="Button" parent="CanvasLayer" unique_id=1795990114]
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="DealButton" type="Button" parent="CanvasLayer" unique_id=97221005]
+offset_right = 8.0
+offset_bottom = 8.0
+
 [node name="Background" type="Sprite2D" parent="." unique_id=668148586]
 visible = false
 show_behind_parent = true

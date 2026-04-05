@@ -6,9 +6,6 @@ var dealer_hand = []
 var dealer_hidden_card = null #tracks face down cards
 var score_manager_reference  # new because of ScoreManager
 
-
-#var player_deck = ['Cups01', 'Cups02', 'Cups03'] #when done manually, not anymore
-
 const MAX_HAND_SIZE = 5 # subject to change
 const DEALER_Y_POSITION = 200
 
@@ -43,27 +40,6 @@ func deal_initial_hand():
 	Contemplate doing a singular function that 
 	just takes different arguments for the player or dealer
 '''
-#func draw_card_initial(hand):
-	#
-	## new code to input any card
-	#if hand.hand.size() >= MAX_HAND_SIZE:
-		#print("Hand is full!")
-		#return
-	#
-	#var card_scene = preload(CARD_SCENE_PATH)
-	#var card_data = CardDatabase.draw_card_db()
-	#print("Drew: ", card_data)
-#
-	#var new_card = card_scene.instantiate()
-	#$"../CardManager".add_child(new_card)
-	#new_card.name = "Card"
-	#
-	##get texture directly
-	#var texture = load(card_data.texture_path)
-	#print("Texture loaded: ", texture)  # will print 'null' if path is wrong
-#
-	#new_card.get_node("Sprite2D").texture = texture
-	#hand.add_card_to_hand(new_card)
 
 func draw_card_to_player():
 	print("score_manager_reference: ", score_manager_reference)
