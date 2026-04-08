@@ -41,7 +41,12 @@ func raycast_at_cursor():
 			print("Card detected")
 			var card_found = result[0].collider.get_parent()
 			if card_found:
-				card_manager_reference.start_drag(card_found)
+				if card_found.card_data.get("is_tarot", false):
+					# If it's tarot, we click it to activate
+					card_found.on_clicked()
+				else:
+					# normal card, just start dragging.
+					card_manager_reference.start_drag(card_found)
 		elif result_collision_mask == COLLISION_MASK_DECK:
 			print("Deck detected — calling draw_card()")
 			# DECK CLICKED

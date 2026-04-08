@@ -1,0 +1,7 @@
+[gd_resource type="Theme" format=3 uid="uid://c06og6q5xpc4h"]
+
+[ext_resource type="FontFile" uid="uid://77mgrtwhhb08" path="res://Assets/Tarot-Related/Golden Type ITC Std Regular.otf" id="1_4as0w"]
+
+[resource]
+default_font = ExtResource("1_4as0w")
+default_font_size = 36

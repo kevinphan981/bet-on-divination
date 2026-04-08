@@ -5,7 +5,9 @@ var card_database_reference
 var dealer_hand = []
 var dealer_hidden_card = null #tracks face down cards
 var score_manager_reference  # new because of ScoreManager
-
+@onready var hit_button = $"../CanvasLayer/MainUI/HitButton"
+@onready var stand_button = $"../CanvasLayer/MainUI/StandButton"
+@onready var result_label = $"../CanvasLayer/MainUI/ResultLabel"
 const MAX_HAND_SIZE = 5 # subject to change
 const DEALER_Y_POSITION = 200
 
@@ -16,11 +18,11 @@ const DEALER_Y_POSITION = 200
 func _ready() -> void:
 	#print($Area2D.collision_mask)
 	# meant to connect the signal to the actual function
-	$"../CanvasLayer/HitButton".pressed.connect(on_hit_button_pressed)
-	$"../CanvasLayer/StandButton".pressed.connect(on_stand_button_pressed)
+	hit_button.pressed.connect(on_hit_button_pressed)
+	stand_button.pressed.connect(on_stand_button_pressed)
 	score_manager_reference = $"../ScoreManager"  # ← new
 	card_database_reference = preload('res://Scripts/CardDatabase.gd')
-	deal_initial_hand()
+	#deal_initial_hand()
 	#print(get_parent().get_children())  # see what nodes are actually at that level
    
 
@@ -32,7 +34,7 @@ func deal_initial_hand():
 	draw_card_to_player()
 	draw_card_to_dealer(true)
 	draw_card_to_player()
-	$"../CanvasLayer/ResultLabel".text = ''
+	result_label.text = ''
 
 
 	
@@ -45,11 +47,22 @@ func draw_card_to_player():
 	print("score_manager_reference: ", score_manager_reference)
 	if $"../PlayerHand".hand.size() >= MAX_HAND_SIZE:
 		return
-	var card_data = CardDatabase.draw_card_db()
+	#var card_data = CardDatabase.draw_card_db()
+	var card_data = CardDatabase.draw_card_for_player()
+	print("Deck received data: ", card_data) # [cite: 43]
+	
+	if card_data.is_empty():
+		print("ERROR: card_data is empty!")
+		return
+		
+		
 	var new_card = create_card(card_data)
 	$"../PlayerHand".add_card_to_hand(new_card)
 	score_manager_reference.update_score_display()
 	score_manager_reference.check_bust()
+	# Only bust-check on non-tarot draws (tarot value is 0)
+	if not card_data.get("is_tarot", false):
+		score_manager_reference.check_bust()
 
 func draw_card_to_dealer(face_down: bool):
 	var card_data = CardDatabase.draw_card_db()
@@ -92,6 +105,11 @@ func create_card(card_data) -> Node:
 	var new_card = card_scene.instantiate()
 	$"../CardManager".add_child(new_card)
 	new_card.card_data = card_data         # set AFTER add_child, not before
+	
+	# new logic for tarot cards
+	if card_data.get("is_tarot", false):
+		new_card.connect("tarot_activated", $"../TarotManager".execute_power)
+		
 	new_card.name = "Card"
 	new_card.get_node("Sprite2D").texture = load(card_data.texture_path)
 	return new_card
@@ -159,3 +177,19 @@ func run_dealer_logic():
 		draw_card_to_dealer(false) #face up
 	score_manager_reference.update_score_display()
 	score_manager_reference.determine_winner()
+	
+# clear table is the next state when we finish a round
+func clear_table():
+	# clear player hand
+	for card in $"../PlayerHand".hand:
+		card.queue_free()
+	$"../PlayerHand".hand.clear()
+	
+	# clear dealer hand
+	for card in dealer_hand:
+		card.queue_free()
+	dealer_hand.clear()
+	dealer_hidden_card = null
+	
+	# reshuffle if needed
+	CardDatabase.shuffle_deck()

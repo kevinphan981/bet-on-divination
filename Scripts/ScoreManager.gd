@@ -20,24 +20,24 @@ func _ready() -> void:
 
 @onready var deck_reference = $"../Deck"
 @onready var player_hand_reference = $"../PlayerHand"
-@onready var result_label = $"../CanvasLayer/ResultLabel"
-@onready var player_score_label = $"../CanvasLayer/ScoreContainer/PlayerScoreLabel"
-@onready var dealer_score_label = $"../CanvasLayer/ScoreContainer/DealerScoreLabel"
-@onready var hit_button = $"../CanvasLayer/HitButton"
-@onready var stand_button = $"../CanvasLayer/StandButton"
+@onready var result_label = $"../CanvasLayer/MainUI/ResultLabel"
+@onready var player_score_label = $"../CanvasLayer/MainUI/ScoreContainer/PlayerScoreLabel"
+@onready var dealer_score_label = $"../CanvasLayer/MainUI/ScoreContainer/DealerScoreLabel"
+@onready var hit_button = $"../CanvasLayer/MainUI/HitButton"
+@onready var stand_button = $"../CanvasLayer/MainUI/StandButton"
 
 func determine_winner():
 	var player_score = calculate_score(player_hand_reference.hand)
 	var dealer_score = calculate_score(deck_reference.dealer_hand)
 	
 	if dealer_score > 21:
-		game_manager_reference.end_game("Player wins! Dealer busted.")
+		game_manager_reference.end_round("player_wins")
 	elif player_score > dealer_score:
-		game_manager_reference.end_game("Player wins!")
+		game_manager_reference.end_round("player_wins")
 	elif dealer_score > player_score:
-		game_manager_reference.end_game("Dealer wins!")
+		game_manager_reference.end_round("dealer_wins")
 	else:
-		game_manager_reference.end_game("Push! It's a tie.")
+		game_manager_reference.end_round("push")
 
 
 	
@@ -83,4 +83,4 @@ func check_bust():
 	var player_score = calculate_score(player_hand_reference.hand)
 	if player_score > 21:
 		print("Player Bust")
-		game_manager_reference.end_game("Dealer Wins! Player busted.")
+		game_manager_reference.end_round("dealer_wins")

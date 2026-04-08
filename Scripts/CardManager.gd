@@ -2,6 +2,9 @@ extends Node2D
 
 const COLLISION_MASK_CARD = 1
 const COLLISION_MASK_CARD_SLOT = 2
+@onready var tarot_desc_label = $"../CanvasLayer/MainUI/InfoPanel/TarotDescription"
+@onready var info_panel = $"../CanvasLayer/MainUI/InfoPanel"
+
 var card_being_dragged
 var screen_size
 var is_hovering_on_card
@@ -11,6 +14,7 @@ var player_hand_reference
 func _ready() -> void:
 	screen_size = get_viewport_rect().size
 	player_hand_reference = $"../PlayerHand"
+	info_panel.visible = false # Hide on start
 	$"../InputManager".connect("left_mouse_button_released",on_left_click_released)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -59,8 +63,22 @@ func on_hovered_over_card(card):
 	if !is_hovering_on_card: #new_card_hovered is conflicting
 		is_hovering_on_card = true
 		highlight_card(card, true)
-	#else:
-		#is_hovering_on_card = false
+	
+	if card.card_data.get("is_tarot", false):
+		info_panel.visible = true
+		
+		#make the panel show up smoothly
+		var tween = create_tween()
+		tween.tween_property(info_panel, "modulate:a", 1.0, 0.2).from(0.0)
+		# Position label near the mouse or card
+		# Format the text nicely with BBCode
+		var card_name = card.card_data.get("name", "Unknown")
+		var card_desc = card.card_data.get("desc", "No description available.")
+		tarot_desc_label.text = "[center][b]%s[/b]\n\n[i]%s[/i][/center]" % [card_name.to_upper(), card_desc]
+		#tarot_desc_label.text = card.card_data.name + "\n\n" + card.card_data.desc
+	else:
+		# Optionally show standard card info or keep hidden
+		info_panel.visible = false
 	
 func on_hovered_off_card(card):
 	#is_hovering_on_card = false
@@ -72,7 +90,8 @@ func on_hovered_off_card(card):
 		highlight_card(new_card_hovered, true)
 	else:
 		is_hovering_on_card = false
-
+	info_panel.visible = false
+	
 func highlight_card(card, hovered):
 	if hovered:
 		card.scale = Vector2(1.05, 1.05) # makes slightly bigger
@@ -120,3 +139,4 @@ func get_card_with_highest_z_index(cards):
 			highest_z_index = current_card.z_index
 			
 	return highest_z_card
+	

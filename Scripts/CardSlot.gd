@@ -1,3 +1,7 @@
+'''
+	not really in use anymore delete later
+'''
+
 extends Node2D
 
 var card_in_slot = false

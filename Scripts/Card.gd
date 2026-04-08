@@ -2,15 +2,12 @@ extends Node2D
 
 signal hovered
 signal hovered_off
+signal tarot_activated(card)  # NEW
+
 
 var position_in_hand
 var card_data = {}
 var is_face_down = false
-
-#func setup(data: Dictionary):
-	#card_data = data
-	#print("Loading texture: ", card_data.texture_path)
-	#$"Sprite2Dimage".texture = load(card_data.texture_path)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -35,4 +32,9 @@ func _on_area_2d_mouse_entered() -> void:
 
 func _on_area_2d_mouse_exited() -> void:
 	emit_signal("hovered_off", self)
+	
+# NEW — called by InputManager on left click
+func on_clicked() -> void:
+	if card_data.get("is_tarot", false):
+		emit_signal("tarot_activated", self)
 	
