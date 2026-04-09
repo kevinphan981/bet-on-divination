@@ -7,17 +7,27 @@
 [ext_resource type="Texture2D" uid="uid://5ky4k553ju82" path="res://Assets/Cards/test.png" id="4_rgh2o"]
 [ext_resource type="Script" uid="uid://b4mnm1e5el0hr" path="res://Scripts/InputManager.gd" id="6_v1gob"]
 [ext_resource type="Script" uid="uid://c0odkcih2ic1x" path="res://Scripts/DealerHand.gd" id="7_jw32o"]
-[ext_resource type="Texture2D" uid="uid://kbcyneligrv7" path="res://Assets/Tarot-Related/yggdrasil-tree-background.png" id="8_50glp"]
 [ext_resource type="PackedScene" uid="uid://ckpov4473ycw4" path="res://Scenes/PauseMenu.tscn" id="9_vy5pj"]
 [ext_resource type="Script" uid="uid://b1ois8s25wwe2" path="res://Scripts/GameManager.gd" id="10_bmxlf"]
 [ext_resource type="Script" uid="uid://bkbn073n0btxq" path="res://Scripts/ScoreManager.gd" id="11_4kpch"]
 [ext_resource type="Theme" uid="uid://c06og6q5xpc4h" path="res://MainTheme.tres" id="11_frkhe"]
+[ext_resource type="FontFile" uid="uid://77mgrtwhhb08" path="res://Assets/Tarot-Related/Golden Type ITC Std Regular.otf" id="12_1p5hy"]
 [ext_resource type="Script" uid="uid://efe7t8cg66n2" path="res://Scripts/TarotManager.gd" id="12_grg3l"]
+[ext_resource type="Texture2D" uid="uid://dn063klimk18g" path="res://Assets/Tarot-Related/wooden-table-bg2.jpg" id="13_1p5hy"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r0du0"]
 size = Vector2(158, 222)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_erwvk"]
+
+[sub_resource type="Theme" id="Theme_h1m7h"]
+default_font = ExtResource("12_1p5hy")
+default_font_size = 36
+
 [node name="Main" type="Node2D" unique_id=387918511]
+
+[node name="TarotManager" type="Node" parent="." unique_id=2061345018]
+script = ExtResource("12_grg3l")
 
 [node name="GameManager" type="Node" parent="." unique_id=1993771374]
 script = ExtResource("10_bmxlf")
@@ -58,32 +68,18 @@ script = ExtResource("6_v1gob")
 script = ExtResource("7_jw32o")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1378948312]
+layer = 10
 
 [node name="MainUI" type="Control" parent="CanvasLayer" unique_id=1677420587]
+custom_minimum_size = Vector2(1920, 1080)
 layout_mode = 3
-anchors_preset = 0
-offset_right = 40.0
-offset_bottom = 40.0
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
 theme = ExtResource("11_frkhe")
-
-[node name="StandButton" type="Button" parent="CanvasLayer/MainUI" unique_id=4822314]
-layout_mode = 0
-offset_left = 1457.0
-offset_top = 250.0
-offset_right = 1630.0
-offset_bottom = 337.0
-theme_override_font_sizes/font_size = 32
-text = "Stand"
-
-[node name="HitButton" type="Button" parent="CanvasLayer/MainUI" unique_id=495087887]
-layout_mode = 0
-offset_left = 1457.0
-offset_top = 348.0
-offset_right = 1631.0
-offset_bottom = 434.0
-pivot_offset = Vector2(85, 28)
-theme_override_font_sizes/font_size = 32
-text = "Hit"
 
 [node name="ScoreContainer" type="VBoxContainer" parent="CanvasLayer/MainUI" unique_id=1727651574]
 layout_mode = 1
@@ -92,22 +88,24 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 569.0
-offset_top = 473.0
-offset_right = 839.0
-offset_bottom = 567.0
+offset_left = -141.0
+offset_top = -47.0
+offset_right = 141.0
+offset_bottom = 47.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("11_frkhe")
+alignment = 1
 
 [node name="DealerScoreLabel" type="Label" parent="CanvasLayer/MainUI/ScoreContainer" unique_id=272651726]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
 text = "DealerScoreLabel"
+horizontal_alignment = 1
 
 [node name="PlayerScoreLabel" type="Label" parent="CanvasLayer/MainUI/ScoreContainer" unique_id=1940364145]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
 text = "PlayerScoreLabel"
+horizontal_alignment = 1
 
 [node name="ResultLabel" type="Label" parent="CanvasLayer/MainUI" unique_id=478557078]
 layout_mode = 1
@@ -116,10 +114,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 760.5
-offset_top = 476.0
-offset_right = 1119.5
-offset_bottom = 564.0
+offset_left = -179.5
+offset_top = -44.0
+offset_right = 179.5
+offset_bottom = 44.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 64
@@ -135,74 +133,115 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = 940.0
-offset_top = 520.0
-offset_right = 940.0
-offset_bottom = 520.0
-
-[node name="InfoPanel" type="PanelContainer" parent="CanvasLayer/MainUI" unique_id=1549288655]
-layout_mode = 0
-offset_left = 1475.0
-offset_top = 783.0
-offset_right = 1880.0
-offset_bottom = 1051.0
-
-[node name="TarotDescription" type="RichTextLabel" parent="CanvasLayer/MainUI/InfoPanel" unique_id=187939374]
-layout_mode = 2
-theme = ExtResource("11_frkhe")
-bbcode_enabled = true
 
 [node name="WagerPanel" type="PanelContainer" parent="CanvasLayer/MainUI" unique_id=1102420865]
 layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
+anchors_preset = 6
+anchor_left = 1.0
 anchor_top = 0.5
-anchor_right = 0.5
+anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = 1417.0
-offset_top = 436.0
-offset_right = 1758.0
-offset_bottom = 603.0
-grow_horizontal = 2
+offset_left = -283.0
+offset_top = -409.0
+offset_bottom = -31.0
+grow_horizontal = 0
 grow_vertical = 2
 
 [node name="WagerBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainUI/WagerPanel" unique_id=133728586]
 layout_mode = 2
+theme_override_constants/separation = 60
 alignment = 1
 
 [node name="WagerAmtLabel" type="Label" parent="CanvasLayer/MainUI/WagerPanel/WagerBoxContainer" unique_id=292718854]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
 text = "WagerAmtLabel
 "
 horizontal_alignment = 1
 
 [node name="WagerUpButton" type="Button" parent="CanvasLayer/MainUI/WagerPanel/WagerBoxContainer" unique_id=1365185249]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
 text = " More Funds +  "
 
 [node name="WagerDownButton" type="Button" parent="CanvasLayer/MainUI/WagerPanel/WagerBoxContainer" unique_id=1795990114]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
 text = "  Withdraw –"
 
 [node name="DealButton" type="Button" parent="CanvasLayer/MainUI/WagerPanel/WagerBoxContainer" unique_id=97221005]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
 text = "Deal"
 
-[node name="Background" type="Sprite2D" parent="." unique_id=668148586]
+[node name="GameplayPanel" type="PanelContainer" parent="CanvasLayer/MainUI" unique_id=1120435022]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -270.0
+offset_top = 30.0
+offset_right = 1.0
+offset_bottom = 246.0
+grow_horizontal = 0
+grow_vertical = 2
+theme = ExtResource("11_frkhe")
+
+[node name="GameButtons" type="VBoxContainer" parent="CanvasLayer/MainUI/GameplayPanel" unique_id=1220244929]
+layout_mode = 2
+theme_override_constants/separation = 60
+alignment = 1
+
+[node name="RoundLabel" type="Label" parent="CanvasLayer/MainUI/GameplayPanel/GameButtons" unique_id=2059714072]
 visible = false
+layout_mode = 2
+text = "RoundLabel"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StandButton" type="Button" parent="CanvasLayer/MainUI/GameplayPanel/GameButtons" unique_id=4822314]
+layout_mode = 2
+theme_override_styles/disabled = SubResource("StyleBoxFlat_erwvk")
+text = "Stand"
+
+[node name="HitButton" type="Button" parent="CanvasLayer/MainUI/GameplayPanel/GameButtons" unique_id=495087887]
+layout_mode = 2
+text = "Hit"
+
+[node name="InfoPanel" type="PanelContainer" parent="CanvasLayer/MainUI" unique_id=1549288655]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -405.0
+offset_top = -268.0
+grow_horizontal = 0
+grow_vertical = 0
+
+[node name="TarotDescription" type="RichTextLabel" parent="CanvasLayer/MainUI/InfoPanel" unique_id=187939374]
+layout_mode = 2
+theme = SubResource("Theme_h1m7h")
+bbcode_enabled = true
+tab_size = 10
+vertical_alignment = 1
+
+[node name="AuthorNote" type="Label" parent="CanvasLayer/MainUI" unique_id=692638998]
+layout_mode = 1
+offset_left = 25.0
+offset_top = 35.0
+offset_right = 577.0
+offset_bottom = 156.0
+text = "*Author's Note:
+Some cards might not work, sorry!"
+
+[node name="Background" type="Sprite2D" parent="." unique_id=668148586]
 show_behind_parent = true
 light_mask = 2
 visibility_layer = 2
 z_index = -10
 position = Vector2(961, 539)
-texture = ExtResource("8_50glp")
-
-[node name="TarotManager" type="Node" parent="." unique_id=2061345018]
-script = ExtResource("12_grg3l")
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("13_1p5hy")
 
 [connection signal="pressed" from="CanvasLayer/MainUI/WagerPanel/WagerBoxContainer/WagerUpButton" to="GameManager" method="_on_wager_up_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainUI/WagerPanel/WagerBoxContainer/WagerDownButton" to="GameManager" method="_on_wager_down_button_pressed"]

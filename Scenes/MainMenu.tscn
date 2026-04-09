@@ -10,6 +10,9 @@ corner_radius_bottom_right = 10
 corner_radius_bottom_left = 10
 shadow_size = 5
 
+[sub_resource type="CompressedTexture2D" id="CompressedTexture2D_853f1"]
+load_path = "res://.godot/imported/yggdrasil-tree-background.png-56de6c6149e21d6e0f69a2e14b1685d3.ctex"
+
 [node name="MainMenu" type="Control" unique_id=260740529]
 process_mode = 3
 layout_mode = 3
@@ -38,19 +41,16 @@ theme_override_constants/separation = 25
 
 [node name="StartButton" type="Button" parent="VBoxContainer" unique_id=1063685404]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("StyleBoxFlat_bnhvo")
 text = "Start Game"
 
 [node name="OptionsButton" type="Button" parent="VBoxContainer" unique_id=1991889068]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("StyleBoxFlat_bnhvo")
 text = "Options"
 
 [node name="ExitButton" type="Button" parent="VBoxContainer" unique_id=652419328]
 layout_mode = 2
-theme_override_font_sizes/font_size = 32
 theme_override_styles/normal = SubResource("StyleBoxFlat_bnhvo")
 text = "Exit"
 
@@ -67,8 +67,18 @@ offset_right = 267.0
 offset_bottom = -56.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_font_sizes/font_size = 64
+theme_override_font_sizes/font_size = 128
 text = "Bet on Divination"
+horizontal_alignment = 1
+
+[node name="TitleBackground" type="Sprite2D" parent="." unique_id=2112622162]
+modulate = Color(1, 1, 1, 0.5254902)
+light_mask = 512
+visibility_layer = 512
+z_index = -10
+position = Vector2(962.5, 546)
+scale = Vector2(0.9994792, 1.0037174)
+texture = SubResource("CompressedTexture2D_853f1")
 
 [connection signal="pressed" from="VBoxContainer/StartButton" to="." method="_on_start_pressed"]
 [connection signal="pressed" from="VBoxContainer/OptionsButton" to="." method="_on_options_pressed"]

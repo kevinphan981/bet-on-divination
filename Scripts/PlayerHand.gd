@@ -1,7 +1,7 @@
 extends Node2D
 
 const CARD_SCENE_PATH = 'res://Scenes/Card.tscn'
-const CARD_WIDTH = 200 #literally play with this to see what fits
+const CARD_WIDTH = 250 #literally play with this to see what fits
 const HAND_Y_POSITION = 900
 #const DEALER_Y_POSITION = 200
 var hand = []
@@ -35,19 +35,32 @@ start_x is the left edge of the entire hand — it shifts left from center by ha
 x_offset then steps each card rightward by CARD_WIDTH from that starting point
 '''
 
+const CARD_OVERLAP_RATIO = 0.6  #"tuning knob". 0.7 = slight overlap, 1.0 = no overlap
+
+func get_card_step() -> float:
+	if hand.is_empty():
+		return 0.0
+	var card = hand[0]
+	var texture = card.get_node("Sprite2D").texture  # adjust node name if yours differs
+	print("Player card width: ", texture.get_width())
+	return texture.get_width() * card.scale.x * CARD_OVERLAP_RATIO
+	
+	
+
 func calculate_card_position(index):
 	#var total_width = (hand.size() - 1) * CARD_WIDTH
 	#var start_x = center_screen_x - total_width/2
 	#var x_offset = start_x + index * CARD_WIDTH 
 	#return x_offset
 	var center = get_viewport().size.x / 2  # calculate live instead of relying on _ready()
-	var total_width = (hand.size() - 1) * CARD_WIDTH
+	var step = get_card_step()
+	var total_width = (hand.size() - 1) * step
 	print("center: ", center)
 	print("total_width: ", total_width)
 	print("hand.size(): ", hand.size())
 	print("CARD_WIDTH: ", CARD_WIDTH)
 	var start_x = center - total_width / 2
-	var x_offset = start_x + index * CARD_WIDTH
+	var x_offset = start_x + index * step
 	return x_offset
 
 # animating the code moving

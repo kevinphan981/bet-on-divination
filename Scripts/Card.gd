@@ -3,6 +3,7 @@ extends Node2D
 signal hovered
 signal hovered_off
 signal tarot_activated(card)  # NEW
+signal card_selected(card)  # fired when a non-tarot card is clicked (used by remove_card power)
 
 
 var position_in_hand
@@ -37,4 +38,6 @@ func _on_area_2d_mouse_exited() -> void:
 func on_clicked() -> void:
 	if card_data.get("is_tarot", false):
 		emit_signal("tarot_activated", self)
+	else:
+		emit_signal("card_selected", self)
 	

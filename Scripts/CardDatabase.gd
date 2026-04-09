@@ -33,7 +33,7 @@ const TAROT_DATA = [{ "name": "The Fool",        "power": "skip_bust",     "desc
 	{ "name": "The Chariot",     "power": "extra_hit",     "desc": "Draw one extra card beyond the hand limit." },
 	{ "name": "Strength",        "power": "ace_toggle",    "desc": "Toggle one Ace between 11 and 1." },
 	{ "name": "The Hermit",      "power": "remove_card",   "desc": "Remove any one card from your hand." },
-	{ "name": "Wheel Of Fortune","power": "randomize_wager","desc":"Your wager is randomized up to 2×." },
+	{ "name": "Wheel Of Fortune","power": "randomize_wager","desc":"Your wager is randomized up to 5×." },
 	{ "name": "Justice",         "power": "push_force",    "desc": "Force a push — reclaim your wager." },
 	{ "name": "The Hanged Man",  "power": "invert_score",  "desc": "Your score counts down from 21 this turn." },
 	{ "name": "Death",           "power": "clear_hand",    "desc": "Discard your hand and redraw fresh." },
@@ -41,12 +41,12 @@ const TAROT_DATA = [{ "name": "The Fool",        "power": "skip_bust",     "desc
 	{ "name": "The Devil",       "power": "steal_years",   "desc": "Steal 5 years directly from the dealer pool." },
 	{ "name": "The Tower",       "power": "dealer_bust",   "desc": "Force the dealer to draw until they bust or hit 21." },
 	{ "name": "The Star",        "power": "restore_years", "desc": "Restore years to your round-start amount if you lose." },
-	{ "name": "The Moon",        "power": "hide_score",    "desc": "Your score is hidden from the dealer logic this round." },
+	{ "name": "The Moon",        "power": "debt_forgiveness",    "desc": "If player loses everything, they are revived with 1 year." },
 	{ "name": "The Sun",         "power": "win_force",     "desc": "Force a win if your score is 15 or higher." },
 	{ "name": "Judgement",       "power": "reveal_all",    "desc": "Reveal all dealer cards immediately." },
 ]
 
-const TAROT_DRAW_CHANCE = 0.3 #change depending on game play
+const TAROT_DRAW_CHANCE = 0.25 #change depending on game play
 
 # Full deck of 52 cards as [ {name, suit, value} ]
 var full_deck = []

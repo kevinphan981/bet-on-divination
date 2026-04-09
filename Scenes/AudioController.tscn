@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://5bd28me5fbln"]
+
+[ext_resource type="Script" uid="uid://dlt0xryelo8bx" path="res://Scripts/AudioController.gd" id="1_le7vc"]
+[ext_resource type="AudioStream" uid="uid://bh72d4jndujkq" path="res://Assets/Music/OpenTTD - Linn's Basket of Treats.mp3" id="2_i31bd"]
+
+[node name="AudioController" type="Node2D" unique_id=974052460]
+script = ExtResource("1_le7vc")
+
+[node name="Song1" type="AudioStreamPlayer2D" parent="." unique_id=305929359]
+stream = ExtResource("2_i31bd")
