@@ -18,6 +18,7 @@ config/icon="res://Assets/Cards/icon.svg"
 [autoload]
 
 CardDatabase="*uid://bx5hhavalb8p2"
+BgMusic="*uid://5bd28me5fbln"
 
 [display]
 

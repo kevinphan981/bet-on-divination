@@ -7,6 +7,7 @@ const COLLISION_MASK_CARD = 1
 const COLLISION_MASK_DECK = 8 # yes
 var card_manager_reference
 var deck_reference
+@onready var tarot_manager_reference = $"../TarotManager"
 
 func _ready() -> void:
 	card_manager_reference = $"../CardManager"
@@ -41,10 +42,20 @@ func raycast_at_cursor():
 			print("Card detected")
 			var card_found = result[0].collider.get_parent()
 			if card_found:
-				card_manager_reference.start_drag(card_found)
-		elif result_collision_mask == COLLISION_MASK_DECK:
-			print("Deck detected — calling draw_card()")
-			# DECK CLICKED
-			deck_reference.draw_card()
+				if card_found.card_data.get("is_tarot", false):
+					# If it's tarot, we click it to activate
+					card_found.on_clicked()
+				elif tarot_manager_reference._awaiting_removal:
+					# Removal mode active — route click to on_clicked() so
+					# card_selected fires and TarotManager can handle it
+					card_found.on_clicked()
+					
+				else:
+					# normal card, just start dragging.
+					card_manager_reference.start_drag(card_found)
+		#elif result_collision_mask == COLLISION_MASK_DECK:
+			#print("Deck detected — calling draw_card()")
+			# DECK CLICKED, we remove this feature
+			#deck_reference.draw_card()
 			
 				

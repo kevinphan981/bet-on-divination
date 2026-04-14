@@ -6,11 +6,10 @@
 size = Vector2(159, 222)
 
 [node name="Card" type="Node2D" unique_id=575809543]
-position = Vector2(200, 700)
 script = ExtResource("1_rjlel")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=837648960]
-scale = Vector2(0.35, 0.35)
+scale = Vector2(0.45, 0.45)
 
 [node name="Area2D" type="Area2D" parent="." unique_id=2093937171]
 
