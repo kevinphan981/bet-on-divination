@@ -58,6 +58,7 @@ position = Vector2(0, 1)
 shape = SubResource("RectangleShape2D_r0du0")
 
 [node name="CardBack" type="Sprite2D" parent="Deck" unique_id=1781504872]
+visible = false
 scale = Vector2(0.35, 0.35)
 texture = ExtResource("4_rgh2o")
 
@@ -99,12 +100,10 @@ alignment = 1
 
 [node name="DealerScoreLabel" type="Label" parent="CanvasLayer/MainUI/ScoreContainer" unique_id=272651726]
 layout_mode = 2
-text = "DealerScoreLabel"
 horizontal_alignment = 1
 
 [node name="PlayerScoreLabel" type="Label" parent="CanvasLayer/MainUI/ScoreContainer" unique_id=1940364145]
 layout_mode = 2
-text = "PlayerScoreLabel"
 horizontal_alignment = 1
 
 [node name="ResultLabel" type="Label" parent="CanvasLayer/MainUI" unique_id=478557078]
@@ -224,15 +223,6 @@ theme = SubResource("Theme_h1m7h")
 bbcode_enabled = true
 tab_size = 10
 vertical_alignment = 1
-
-[node name="AuthorNote" type="Label" parent="CanvasLayer/MainUI" unique_id=692638998]
-layout_mode = 1
-offset_left = 25.0
-offset_top = 35.0
-offset_right = 577.0
-offset_bottom = 156.0
-text = "*Author's Note:
-Some cards might not work, sorry!"
 
 [node name="Background" type="Sprite2D" parent="." unique_id=668148586]
 show_behind_parent = true

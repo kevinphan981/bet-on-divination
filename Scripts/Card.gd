@@ -40,4 +40,62 @@ func on_clicked() -> void:
 		emit_signal("tarot_activated", self)
 	else:
 		emit_signal("card_selected", self)
+		
+		
+'''
+	Card flip feature
+	Uses "squish and reveal" tweens, then shows the face up card.
+'''
+
+func flip_face_up() -> void:
+	if not is_face_down:
+		return
+		
+	var sprite = get_node("Sprite2D")
+	var face_texture = load(card_data.texture_path)
+	
+	# phase 1: squish to zero on x-axis (fold inward)
+	var tween = create_tween()
+	tween.tween_property(sprite, "scale:x", 0.0, 0.18).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
+	await tween.finished
+	
+	# swap at midpoint
+	sprite.texture = face_texture
+	is_face_down = false
+	
+	# phase 2: expand when back out
+	var tween2 = create_tween()
+	tween2.tween_property(sprite, "scale:x", .45, 0.45).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	await tween2.finished
+	
+'''
+	Floating value pop (balatro style)
+	spawns a +n label that floats up and fades out above the card
+'''
+func show_value_popup(value: int) -> void:
+	if value <= 0:
+		return #don't show anything for tarot cards
+		
+	var label = Label.new()
+	label.text = "+%d" % value
+	label.z_index = 10 #highest to show up
+	
+	#style
+	var font_size = 42
+	label.add_theme_font_size_override("font_size", font_size)
+	label.add_theme_color_override("font_color", Color(1.0, 0.52, 0.3))       # warm gold
+	label.add_theme_color_override("font_outline_color", Color(0.1, 0.05, 0.0)) # dark outline
+	label.add_theme_constant_override("outline_size", 4)
+	
+	# Start just above the card center, SUBJECT TO CHANGE
+	label.position = Vector2(-20, -80)
+	add_child(label)
+	
+	# animation: float up 60px and fade out over 0.9s
+	var tween = create_tween()
+	tween.set_parallel(true)
+	tween.tween_property(label, "position:y", label.position.y - 60, 0.9).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+	tween.tween_property(label, "modulate:a", 0.0, 0.9).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	await tween.finished
+	label.queue_free()
 	

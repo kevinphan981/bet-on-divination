@@ -106,22 +106,8 @@ func start_round():
 
 # will have to adjust for tarot logic
 func end_round(result: String):
-	#state = GameState.ROUND_OVER
-	#match result:
-		#"player_wins":
-			#player_years += current_wager
-			#show_result("You gain %d years. Total: %d" % [current_wager, player_years])
-		#"dealer_wins":
-			#player_years -= current_wager
-			#show_result("You lose %d years. Total: %d" % [current_wager, player_years])
-		#"push":
-			#show_result("Push! Your %d years are returned." % current_wager)
-	#check_game_over()
-	#
-	## Reset other temporary tarot flags
-	#dealer_frozen = false
-	#inverted_scoring = false
-	#hide_UI(false)
+	if state == GameState.ROUND_OVER or state == GameState.GAME_OVER:
+		return  # already resolved, ignore duplicate calls
 	
 		# --- Tarot: inverted_scoring flips winner/loser (push is unaffected) ---
 	var effective_result := result
@@ -131,7 +117,7 @@ func end_round(result: String):
  
 	match effective_result:
 		"player_wins":
-			player_years += current_wager*(3/2)
+			player_years += current_wager*(1.5)
 			show_result("You gain %d years. Total: %d" % [current_wager, player_years])
  
 		"dealer_wins":
@@ -148,6 +134,7 @@ func end_round(result: String):
 				show_result("Temperance softens the blow — you lose only %d years. Total: %d" % [loss, player_years])
  
 			# Tarot: restore_on_loss — years snap back to what they were at round start
+			# this doesn't work for some reason..?
 			elif restore_on_loss:
 				restore_on_loss = false
 				player_years = _years_at_round_start
@@ -165,13 +152,14 @@ func end_round(result: String):
 		is_protected_from_death = false
 		player_years = 1
 		show_result("Debt Forgiveness saves you from death! You survive with 1 year.")
- 
-	check_game_over()
- 
-	# Reset per-round tarot flags
+ 	# Reset per-round tarot flags
 	dealer_frozen = false
 	inverted_scoring = false
 	hide_UI(false)
+	
+	check_game_over()
+ 
+
 
 
 func check_game_over():
@@ -186,7 +174,8 @@ func check_game_over():
 		
 		# you die and get sent to the main menu after a bit
 		await get_tree().create_timer(3.5).timeout
-		get_tree().change_scene_to_file("res://Scenes/MainMenu.tscn")
+		#get_tree().change_scene_to_file("res://Scenes/MainMenu.tscn") # no work
+		Engine.get_main_loop().change_scene_to_file("res://Scenes/MainMenu.tscn")
 
 	elif player_years >= IMMORTALITY_THRESHOLD:
 		state = GameState.GAME_OVER
@@ -205,7 +194,7 @@ func check_game_over():
 		wager_down_button.disabled = false
 		
 		# we wait for 1.5 seconds for the next round
-		await get_tree().create_timer(1.5).timeout
+		await get_tree().create_timer(3.5).timeout
 		advance_to_next_round()
 
 func advance_to_next_round():

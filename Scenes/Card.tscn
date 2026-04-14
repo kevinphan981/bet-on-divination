@@ -6,7 +6,6 @@
 size = Vector2(159, 222)
 
 [node name="Card" type="Node2D" unique_id=575809543]
-position = Vector2(200, 700)
 script = ExtResource("1_rjlel")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=837648960]
