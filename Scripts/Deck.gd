@@ -5,10 +5,10 @@ var card_database_reference
 var dealer_hand = []
 var dealer_hidden_card = null #tracks face down cards
 var score_manager_reference  # new because of ScoreManager
-@onready var hit_button = $"../CanvasLayer/MainUI/GameplayPanel/GameButtons/HitButton"
-@onready var stand_button = $"../CanvasLayer/MainUI/GameplayPanel/GameButtons/StandButton"
+@onready var hit_button = $"../CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer/HitButton"
+@onready var stand_button = $"../CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer/StandButton"
 @onready var result_label = $"../CanvasLayer/MainUI/ResultLabel"
-const MAX_HAND_SIZE = 7 # subject to change, 7 based on google search
+const MAX_HAND_SIZE = 5 # subject to change, 7 based on google search
 const DEALER_Y_POSITION = 200
 const PLAYER_Y_POSITION = 900
 
@@ -72,8 +72,12 @@ func draw_card_to_player():
 		return
 	
 	var new_card = create_card(card_data, PLAYER_Y_POSITION)
+	
+	# we draw the card physically
 	$"../PlayerHand".add_card_to_hand(new_card)
 	new_card.call("show_value_popup", card_data.get("value", 0))
+	AudioController.play_card_draw()
+	
 	await get_tree().create_timer(DEAL_DELAY).timeout  # ← wait after dealing
 	
 	score_manager_reference.update_score_display()
@@ -81,6 +85,8 @@ func draw_card_to_player():
 	# Only bust-check on non-tarot draws (tarot value is 0)
 	if not card_data.get("is_tarot", false):
 		score_manager_reference.check_bust()
+		
+	
 	
 
 
@@ -88,6 +94,7 @@ func draw_card_to_dealer(face_down: bool):
 
 	var card_data = CardDatabase.draw_card_db()
 	var new_card = create_card(card_data, DEALER_Y_POSITION)
+	AudioController.play_card_draw()
 	if face_down:
 		new_card.get_node("Sprite2D").texture = load(CARD_BACK_PATH)
 		new_card.is_face_down = true # actually excludes it from the score

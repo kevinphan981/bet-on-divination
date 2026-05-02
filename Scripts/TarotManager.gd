@@ -17,6 +17,7 @@ func execute_power(card):
 	
 	# removes card from playerhand array so it doesn't break calcuation/positioning
 	if player_hand.hand.has(card):
+		AudioController.play_special_card_activate()
 		player_hand.remove_card_from_hand(card)
 		
 	# update visuals/logic now card is gone

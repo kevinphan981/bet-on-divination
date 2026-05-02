@@ -2,9 +2,36 @@
 
 [ext_resource type="Script" uid="uid://dlt0xryelo8bx" path="res://Scripts/AudioController.gd" id="1_le7vc"]
 [ext_resource type="AudioStream" uid="uid://bh72d4jndujkq" path="res://Assets/Music/OpenTTD - Linn's Basket of Treats.mp3" id="2_i31bd"]
+[ext_resource type="AudioStream" uid="uid://blcarph3m3ph1" path="res://Assets/Sounds/Cards/Draw/GP_Draw_3.wav" id="3_jqw5m"]
+[ext_resource type="AudioStream" uid="uid://v7jiblt4aap5" path="res://Assets/Sounds/Cards/GP_Shuffle.wav" id="4_6c31v"]
+[ext_resource type="AudioStream" uid="uid://cnljaykn8ixvb" path="res://Assets/Sounds/Cards/Select/GP_Turbo_Select_4.wav" id="5_6c31v"]
+[ext_resource type="AudioStream" uid="uid://c586tr1ndlswv" path="res://Assets/Sounds/Buff/GP_Heal_1.wav" id="6_jd2od"]
+[ext_resource type="AudioStream" uid="uid://dyayfrtay8fy6" path="res://Assets/Sounds/Damage/GP_Damage_5.wav" id="7_n137f"]
+[ext_resource type="AudioStream" uid="uid://b2g0bjj5ckkem" path="res://Assets/Sounds/UI/UI_Select_1.wav" id="8_h25h8"]
 
 [node name="AudioController" type="Node2D" unique_id=974052460]
 script = ExtResource("1_le7vc")
 
 [node name="Song1" type="AudioStreamPlayer2D" parent="." unique_id=305929359]
 stream = ExtResource("2_i31bd")
+pitch_scale = 0.78
+
+[node name="CardDraw" type="AudioStreamPlayer2D" parent="." unique_id=1633172754]
+stream = ExtResource("3_jqw5m")
+pitch_scale = 1.35
+
+[node name="CardShuffle" type="AudioStreamPlayer2D" parent="." unique_id=1972309559]
+stream = ExtResource("4_6c31v")
+pitch_scale = 1.09
+
+[node name="SpecialCardDraw" type="AudioStreamPlayer2D" parent="." unique_id=910102441]
+stream = ExtResource("5_6c31v")
+
+[node name="SpecialCardActivate" type="AudioStreamPlayer2D" parent="." unique_id=427100410]
+stream = ExtResource("6_jd2od")
+
+[node name="Damage" type="AudioStreamPlayer2D" parent="." unique_id=284060130]
+stream = ExtResource("7_n137f")
+
+[node name="ButtonSelect" type="AudioStreamPlayer2D" parent="." unique_id=540292330]
+stream = ExtResource("8_h25h8")

@@ -5,6 +5,8 @@ var player_years: int = 100
 var current_wager: int = 0
 const IMMORTALITY_THRESHOLD: int = 1000
 const STARTING_YEARS: int = 100
+# round counter, as is
+var round_counter: int = 1
 
 # round state (for state machine)
 enum GameState { BETTING, PLAYING, ROUND_OVER, GAME_OVER }
@@ -15,17 +17,22 @@ var current_round: int = 1
 @onready var deck_reference = $"../Deck"
 @onready var player_hand_reference = $"../PlayerHand"
 @onready var score_manager_reference = $"../ScoreManager"
-@onready var hit_button = $"../CanvasLayer/MainUI/GameplayPanel/GameButtons/HitButton"
-@onready var stand_button = $"../CanvasLayer/MainUI/GameplayPanel/GameButtons/StandButton"
+
+# will change because of my UI fixes
+
+# the entire sidepanel
+@onready var side_panel = $"../CanvasLayer/MainUI/SidePanel"
+@onready var hit_button = $"../CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer/HitButton"
+@onready var stand_button = $"../CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer/StandButton"
 @onready var result_label = $"../CanvasLayer/MainUI/ResultLabel"
-@onready var wager_label = $"../CanvasLayer/MainUI/WagerPanel/WagerBoxContainer/WagerAmtLabel"
+@onready var wager_label = $"../CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer/WagerAmtLabel"
 @onready var player_score_label = $"../CanvasLayer/MainUI/ScoreContainer/PlayerScoreLabel"
 @onready var dealer_score_label = $"../CanvasLayer/MainUI/ScoreContainer/DealerScoreLabel"
-
+@onready var round_label = $"../CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer/RoundLabel"
 # buttons and wager increment
-@onready var wager_up_button = $"../CanvasLayer/MainUI/WagerPanel/WagerBoxContainer/WagerUpButton"
-@onready var wager_down_button = $"../CanvasLayer/MainUI/WagerPanel/WagerBoxContainer/WagerDownButton"
-@onready var deal_button = $"../CanvasLayer/MainUI/WagerPanel/WagerBoxContainer/DealButton"
+@onready var wager_up_button = $"../CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer/WagerUpButton"
+@onready var wager_down_button = $"../CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer/WagerDownButton"
+@onready var deal_button = $"../CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer/DealButton"
 
 const WAGER_INCREMENT: int = 5  # adjust to taste
 
@@ -40,14 +47,12 @@ var is_protected_from_death: bool = false  # Debt Forgiveness: survive one zero-
 # Snapshot of player_years taken at the start of each round for restore_on_loss
 var _years_at_round_start: int = 0
 
-
 # too many things overlay each other, temporary fix until I can get some blur animation
 func hide_UI(condition: bool):
 	hit_button.visible = condition
 	stand_button.visible = condition
 	player_score_label.visible = condition 
 	dealer_score_label.visible = condition
-
 
 func disable_UI(condition: bool):
 	hit_button.disabled = condition 
@@ -58,11 +63,13 @@ func _ready():
 	# disable all buttons until the player bets
 	disable_UI(true)
 	hide_UI(false)
+
 	result_label.text = "Awaiting player wager..."
 	wager_up_button.pressed.connect(_on_wager_up_button_pressed)
 	wager_down_button.pressed.connect(_on_wager_down_button_pressed)
 	#deal_button.pressed.connect(_on_deal_button_pressed)
 	update_wager_display()
+	
 	
 
 func _on_wager_up_button_pressed() -> void:
@@ -103,11 +110,21 @@ func start_round():
 	result_label.text = "Awaiting player wager..."
 	update_wager_display()
 	deck_reference.deal_initial_hand()
+	
+	# round label
+	print("Round is: ", round_counter)
+	round_label.text = "Round: %d" % [round_counter]
+
 
 # will have to adjust for tarot logic
 func end_round(result: String):
 	if state == GameState.ROUND_OVER or state == GameState.GAME_OVER:
 		return  # already resolved, ignore duplicate calls
+	
+	# increment round and make the entire side panel disappear to see the message.
+	round_counter += 1
+	#side_panel.visible = false # will need to adjust
+
 	
 		# --- Tarot: inverted_scoring flips winner/loser (push is unaffected) ---
 	var effective_result := result
@@ -156,6 +173,10 @@ func end_round(result: String):
 	dealer_frozen = false
 	inverted_scoring = false
 	hide_UI(false)
+	
+	# wait a second and then play the shuffling sound
+	await get_tree().create_timer(1.0).timeout
+	AudioController.play_card_shuffle()
 	
 	check_game_over()
  

@@ -87,11 +87,11 @@ func check_bust():
 # ---------------------------------------------------------------------------
 func _force_dealer_bust():
 	# Keep drawing until the dealer hand is over 21.
-	# We cap at 10 iterations to avoid an infinite loop if scoring breaks.
-	var max_attempts := 10
+	# We cap at 5 iterations to avoid an infinite loop if scoring breaks.
+	var max_attempts := 5
 	var attempts := 0
 	while calculate_score(deck_reference.dealer_hand) <= 21 and attempts < max_attempts:
 		deck_reference.draw_card_to_dealer(false)
+		determine_winner()
+		print("dealer_bust: dealer score is now ", calculate_score(deck_reference.dealer_hand))
 		attempts += 1
-	print("dealer_bust: dealer score is now ", calculate_score(deck_reference.dealer_hand))
-	determine_winner()

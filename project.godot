@@ -19,6 +19,7 @@ config/icon="res://Assets/Cards/icon.svg"
 
 CardDatabase="*uid://bx5hhavalb8p2"
 BgMusic="*uid://5bd28me5fbln"
+AudioController="*uid://5bd28me5fbln"
 
 [display]
 

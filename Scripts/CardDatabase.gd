@@ -113,7 +113,8 @@ func draw_card_for_player() -> Dictionary:
 	if roll < TAROT_DRAW_CHANCE and not tarot_pile.is_empty():
 		var card = tarot_pile.pop_back()
 		print("Drawing Tarot: ", card.name) 
-		return card
+		AudioController.play_special_card_draw()
+		return card 
 		
 	var card = draw_card_db()
 	print("Drawing Standard: ", card.name)# [cite: 4]

@@ -2,8 +2,8 @@ extends Node2D
 
 const COLLISION_MASK_CARD = 1
 const COLLISION_MASK_CARD_SLOT = 2
-@onready var tarot_desc_label = $"../CanvasLayer/MainUI/InfoPanel/TarotDescription"
-@onready var info_panel = $"../CanvasLayer/MainUI/InfoPanel"
+@onready var tarot_desc_label = $"../CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer/InfoPanel/TarotDescription"
+@onready var info_panel = $"../CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer/InfoPanel"
 
 var card_being_dragged
 var screen_size
@@ -16,6 +16,8 @@ func _ready() -> void:
 	player_hand_reference = $"../PlayerHand"
 	info_panel.visible = false # Hide on start
 	$"../InputManager".connect("left_mouse_button_released",on_left_click_released)
+	print("info_panel: ", info_panel)
+	print("tarot_desc_label: ", tarot_desc_label)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -70,8 +72,9 @@ func on_hovered_over_card(card):
 		info_panel.visible = true
 		
 		#make the panel show up smoothly
+		info_panel.modulate.a = 0.0  # explicitly reset first
 		var tween = create_tween()
-		tween.tween_property(info_panel, "modulate:a", 1.0, 0.2).from(0.0)
+		tween.tween_property(info_panel, "modulate:a", 1.0, 0.2) #.from(0.0)
 		# Position label near the mouse or card
 		# Format the text nicely with BBCode
 		var card_name = card.card_data.get("name", "Unknown")
