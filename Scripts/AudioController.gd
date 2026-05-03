@@ -25,3 +25,8 @@ func play_special_card_activate():
 func play_card_shuffle():
 	if not mute:
 		$CardShuffle.play()
+		
+		
+func play_damage():
+	if not mute:
+		$Damage.play()

@@ -47,30 +47,66 @@ var is_protected_from_death: bool = false  # Debt Forgiveness: survive one zero-
 # Snapshot of player_years taken at the start of each round for restore_on_loss
 var _years_at_round_start: int = 0
 
-# too many things overlay each other, temporary fix until I can get some blur animation
-func hide_UI(condition: bool):
-	hit_button.visible = condition
-	stand_button.visible = condition
-	player_score_label.visible = condition 
-	dealer_score_label.visible = condition
+'''
+	single function that owns the UI states, call in every function
+'''
+func _apply_ui_for_state() -> void:
+	match state:
+		GameState.BETTING:
+			hit_button.visible   = false
+			stand_button.visible = false
+			player_score_label.visible = false
+			dealer_score_label.visible = false
+			result_label.text    = "Awaiting player wager..."
+			deal_button.disabled        = false
+			wager_up_button.disabled    = false
+			wager_down_button.disabled  = false
+			hit_button.disabled         = true
+			stand_button.disabled       = true
 
-func disable_UI(condition: bool):
-	hit_button.disabled = condition 
-	stand_button.disabled = condition 
+		GameState.PLAYING:
+			hit_button.visible   = true
+			stand_button.visible = true
+			player_score_label.visible = true
+			dealer_score_label.visible = true
+			deal_button.disabled        = true
+			wager_up_button.disabled    = true
+			wager_down_button.disabled  = true
+			hit_button.disabled         = false
+			stand_button.disabled       = false
+
+		GameState.ROUND_OVER:
+			# Scores stay visible so the highlight color is readable.
+			hit_button.visible   = false
+			stand_button.visible = false
+			player_score_label.visible = false
+			dealer_score_label.visible = false
+			deal_button.disabled        = true
+			wager_up_button.disabled    = true
+			wager_down_button.disabled  = true
+			hit_button.disabled         = true
+			stand_button.disabled       = true
+			
+		GameState.GAME_OVER:
+			hit_button.visible   = false
+			stand_button.visible = false
+			deal_button.disabled        = true
+			wager_up_button.disabled    = true
+			wager_down_button.disabled  = true
+			hit_button.disabled         = true
+			stand_button.disabled       = true
+			player_score_label.visible = false
+			dealer_score_label.visible = false
 
 func _ready():
-	#state = GameState.PLAYING
-	# disable all buttons until the player bets
-	disable_UI(true)
-	hide_UI(false)
-
-	result_label.text = "Awaiting player wager..."
 	wager_up_button.pressed.connect(_on_wager_up_button_pressed)
 	wager_down_button.pressed.connect(_on_wager_down_button_pressed)
-	#deal_button.pressed.connect(_on_deal_button_pressed)
+	state = GameState.BETTING
+	_apply_ui_for_state()
 	update_wager_display()
-	
-	
+	GameLog.add("Game started — you have %d years." % player_years)
+
+
 
 func _on_wager_up_button_pressed() -> void:
 	if state != GameState.BETTING:
@@ -101,12 +137,6 @@ func _on_deal_button_pressed() -> void:
 
 func start_round():
 	state = GameState.PLAYING
-	hide_UI(true)
-	hit_button.disabled = false
-	stand_button.disabled = false
-	deal_button.disabled = true
-	wager_up_button.disabled = true
-	wager_down_button.disabled = true
 	result_label.text = "Awaiting player wager..."
 	update_wager_display()
 	deck_reference.deal_initial_hand()
@@ -119,79 +149,64 @@ func start_round():
 # will have to adjust for tarot logic
 func end_round(result: String):
 	if state == GameState.ROUND_OVER or state == GameState.GAME_OVER:
-		return  # already resolved, ignore duplicate calls
-	
-	# increment round and make the entire side panel disappear to see the message.
-	round_counter += 1
-	#side_panel.visible = false # will need to adjust
+		return  # guard against duplicate calls
 
-	
-		# --- Tarot: inverted_scoring flips winner/loser (push is unaffected) ---
+	# ── Apply tarot modifiers ─────────────────────────────────────────────
 	var effective_result := result
 	if inverted_scoring and result != "push":
 		effective_result = "dealer_wins" if result == "player_wins" else "player_wins"
-		print("Inverted scoring active — result flipped to: ", effective_result)
- 
+
 	match effective_result:
 		"player_wins":
-			player_years += current_wager*(1.5)
-			show_result("You gain %d years. Total: %d" % [current_wager, player_years])
- 
+			player_years += current_wager
+			result_label.text = "You gain %d years! Total: %d" % [current_wager, player_years]
 		"dealer_wins":
-			# Tarot: skip_next_bust — bust loss ignored entirely
 			if skip_next_bust:
 				skip_next_bust = false
-				show_result("The Fool protects you — bust ignored! Total: %d" % player_years)
- 
-			# Tarot: half_loss_on_bust — only half the wager is lost on a bust
+				result_label.text = "The Fool protects you! Total: %d" % player_years
 			elif half_loss_on_bust:
+				AudioController.play_damage()
 				var loss := current_wager / 2
 				player_years -= loss
 				half_loss_on_bust = false
-				show_result("Temperance softens the blow — you lose only %d years. Total: %d" % [loss, player_years])
- 
-			# Tarot: restore_on_loss — years snap back to what they were at round start
-			# this doesn't work for some reason..?
+				result_label.text = "Temperance softens the blow — lose %d years. Total: %d" % [loss, player_years]
 			elif restore_on_loss:
 				restore_on_loss = false
 				player_years = _years_at_round_start
-				show_result("Judgement restores your years. Total: %d" % player_years)
- 
+				result_label.text = "Judgement restores your years. Total: %d" % player_years
 			else:
 				player_years -= current_wager
-				show_result("You lose %d years. Total: %d" % [current_wager, player_years])
- 
+				AudioController.play_damage()
+				result_label.text = "You lose %d years. Total: %d" % [current_wager, player_years]
 		"push":
-			show_result("Push! Your %d years are returned." % current_wager)
- 
-	# Tarot: is_protected_from_death — survive falling to 0 once
+			result_label.text = "Push! Your %d years are returned." % current_wager
+
 	if player_years <= 0 and is_protected_from_death:
+		AudioController.play_damage()
 		is_protected_from_death = false
 		player_years = 1
-		show_result("Debt Forgiveness saves you from death! You survive with 1 year.")
- 	# Reset per-round tarot flags
+		result_label.text = "Debt Forgiveness saves you! You survive with 1 year."
+
+	# Reset per-round tarot flags
 	dealer_frozen = false
 	inverted_scoring = false
-	hide_UI(false)
-	
-	# wait a second and then play the shuffling sound
-	await get_tree().create_timer(1.0).timeout
-	AudioController.play_card_shuffle()
-	
-	check_game_over()
+
+	state = GameState.ROUND_OVER
+	GameLog.add(result_label.text)  # logs whatever the outcome message was
+	_apply_ui_for_state()  # scores visible, buttons hidden
+	update_wager_display()
+	print(result_label.text)
+
+	# Wait here so the player can read the highlighted scores + result
+	await get_tree().create_timer(2.5).timeout
+	_finish_round()
+
  
-
-
 
 func check_game_over():
 	if player_years <= 0:
 		state = GameState.GAME_OVER
 		show_result("You have no years left. You are dead.")
-		hit_button.disabled = true
-		stand_button.disabled = true
-		deal_button.disabled = true
-		wager_up_button.disabled = true
-		wager_down_button.disabled = true 
 		
 		# you die and get sent to the main menu after a bit
 		await get_tree().create_timer(3.5).timeout
@@ -201,33 +216,20 @@ func check_game_over():
 	elif player_years >= IMMORTALITY_THRESHOLD:
 		state = GameState.GAME_OVER
 		show_result("You have transcended mortaliy. You win.")
-		hit_button.disabled = true
-		stand_button.disabled = true 
-		deal_button.disabled = true
-		wager_up_button.disabled = true
-		wager_down_button.disabled = true
+
 	else:
-		#state = GameState.BETTING
-		hit_button.disabled = true
-		stand_button.disabled = true
-		deal_button.disabled = false
-		wager_up_button.disabled = false
-		wager_down_button.disabled = false
+		state = GameState.BETTING
 		
 		# we wait for 1.5 seconds for the next round
 		await get_tree().create_timer(3.5).timeout
 		advance_to_next_round()
 
 func advance_to_next_round():
+	score_manager_reference.reset_score_colors()
 	deck_reference.clear_table()
 	current_round += 1
 	current_wager = 0
 	state = GameState.BETTING
-	hit_button.disabled = true
-	stand_button.disabled = true
-	deal_button.disabled = false
-	wager_up_button.disabled = false
-	wager_down_button.disabled = false
 	result_label.text = "Awaiting player wager..."
 	update_wager_display()
 
@@ -241,19 +243,44 @@ func restart():
 
 # wager
 func place_wager(amount: int):
-	if state != GameState.BETTING:
-		return
 	if amount <= 0 or amount > player_years:
-		print("Invalid wager")
 		return
 	current_wager = amount
-	print("Wager placed: %d years" % current_wager)
-	start_round()
+	_years_at_round_start = player_years
+	state = GameState.PLAYING
+	round_label.text = "Round: %d" % current_round
+	_apply_ui_for_state()
+	GameLog.divider("Round %d" % current_round)
+	update_wager_display()
+	deck_reference.deal_initial_hand()
+	
+func _finish_round():
+	if player_years <= 0:
+		state = GameState.GAME_OVER
+		_apply_ui_for_state()
+		result_label.text = "You have no years left. You are dead."
+		await get_tree().create_timer(3.5).timeout
+		Engine.get_main_loop().change_scene_to_file("res://Scenes/MainMenu.tscn")
 
+	elif player_years >= IMMORTALITY_THRESHOLD:
+		state = GameState.GAME_OVER
+		_apply_ui_for_state()
+		result_label.text = "You have transcended mortality. You win."
+
+	else:
+		# Clean up and go back to betting
+		score_manager_reference.reset_score_colors()
+		deck_reference.clear_table()
+		current_round += 1
+		current_wager = 0
+		state = GameState.BETTING
+		_apply_ui_for_state()
+		update_wager_display()
+
+#--------------- Helpers ---------------------------------
 func update_wager_display():
 	wager_label.text = "Years: %d | Wager: %d" % [player_years, current_wager]
 
-# helper show result
 func show_result(message: String):
 	result_label.text = message
 	print(message)

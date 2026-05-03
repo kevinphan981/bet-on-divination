@@ -9,16 +9,24 @@ var card_being_dragged
 var screen_size
 var is_hovering_on_card
 var player_hand_reference
+var _showing_card_desc: bool = false  # tracks whether we're in hover mode
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	screen_size = get_viewport_rect().size
 	player_hand_reference = $"../PlayerHand"
-	info_panel.visible = false # Hide on start
+	info_panel.visible = true # now always visible
 	$"../InputManager".connect("left_mouse_button_released",on_left_click_released)
 	print("info_panel: ", info_panel)
 	print("tarot_desc_label: ", tarot_desc_label)
+	GameLog.connect("log_updated", _refresh_log)
+	#GameLog.add("Game started.")
 
+func _refresh_log() -> void:
+	if not _showing_card_desc:
+		tarot_desc_label.text = GameLog.get_display_text()
+		
+		
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	if card_being_dragged:
@@ -61,41 +69,37 @@ func connect_card_signals(card):
 # most basic functions to describe it
 func on_hovered_over_card(card):
 	if card_being_dragged:
-		# if not dragging
 		highlight_card(card, false)
-	#var new_card_hovered = raycast_check_for_card()
-	if !is_hovering_on_card: #new_card_hovered is conflicting
+	if !is_hovering_on_card:
 		is_hovering_on_card = true
 		highlight_card(card, true)
-	
+
 	if card.card_data.get("is_tarot", false):
-		info_panel.visible = true
-		
-		#make the panel show up smoothly
-		info_panel.modulate.a = 0.0  # explicitly reset first
+		_showing_card_desc = true
+		info_panel.modulate.a = 0.0
 		var tween = create_tween()
-		tween.tween_property(info_panel, "modulate:a", 1.0, 0.2) #.from(0.0)
-		# Position label near the mouse or card
-		# Format the text nicely with BBCode
+		tween.tween_property(info_panel, "modulate:a", 1.0, 0.2)
 		var card_name = card.card_data.get("name", "Unknown")
 		var card_desc = card.card_data.get("desc", "No description available.")
 		tarot_desc_label.text = "[center][b]%s[/b]\n\n[i]%s[/i][/center]" % [card_name.to_upper(), card_desc]
-		#tarot_desc_label.text = card.card_data.name + "\n\n" + card.card_data.desc
 	else:
-		# Optionally show standard card info or keep hidden
-		info_panel.visible = false
+		_showing_card_desc = false
+		tarot_desc_label.text = GameLog.get_display_text()
 	
 func on_hovered_off_card(card):
-	#is_hovering_on_card = false
 	highlight_card(card, false)
-	
-	#check if we hovered off one card onto another
 	var new_card_hovered = raycast_check_for_card()
 	if new_card_hovered:
 		highlight_card(new_card_hovered, true)
 	else:
 		is_hovering_on_card = false
-	info_panel.visible = false
+
+	# Fade back to log
+	_showing_card_desc = false
+	var tween = create_tween()
+	tween.tween_property(info_panel, "modulate:a", 1.0, 0.2)
+	tarot_desc_label.text = GameLog.get_display_text()
+
 	
 func highlight_card(card, hovered):
 	if hovered:

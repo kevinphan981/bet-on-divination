@@ -93,7 +93,6 @@ offset_right = 141.0
 offset_bottom = 47.0
 grow_horizontal = 2
 grow_vertical = 2
-theme = ExtResource("11_frkhe")
 alignment = 1
 
 [node name="DealerScoreLabel" type="Label" parent="CanvasLayer/MainUI/ScoreContainer" unique_id=272651726]
@@ -151,7 +150,7 @@ theme_override_constants/margin_bottom = 12
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/MainUI/SidePanel/MarginContainer" unique_id=256285666]
 layout_mode = 2
-theme_override_constants/separation = 28
+theme_override_constants/separation = 30
 alignment = 1
 
 [node name="RoundLabel" type="Label" parent="CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer" unique_id=2059714072]
@@ -159,8 +158,6 @@ layout_mode = 2
 text = "Start Round"
 horizontal_alignment = 1
 max_lines_visible = 4
-visible_characters = 22
-visible_ratio = 2.2
 
 [node name="WagerAmtLabel" type="Label" parent="CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer" unique_id=292718854]
 layout_mode = 2
@@ -189,23 +186,33 @@ text = "Stand"
 layout_mode = 2
 text = "Hit"
 
-[node name="InfoPanel" type="PanelContainer" parent="CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer" unique_id=1549288655]
+[node name="Label" type="Label" parent="CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer" unique_id=589618487]
 layout_mode = 2
+text = "Game Log"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="InfoPanel" type="PanelContainer" parent="CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer" unique_id=1549288655]
+clip_contents = true
+custom_minimum_size = Vector2(100, 300)
+layout_mode = 2
+size_flags_vertical = 4
 mouse_filter = 1
 theme = SubResource("Theme_1p5hy")
 
 [node name="TarotDescription" type="RichTextLabel" parent="CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer/InfoPanel" unique_id=187939374]
 layout_mode = 2
 theme = ExtResource("11_frkhe")
+theme_override_font_sizes/normal_font_size = 32
 bbcode_enabled = true
-text = "TarotDesc"
-fit_content = true
+text = " "
+scroll_following = true
+scroll_following_visible_characters = true
 autowrap_mode = 2
-tab_size = 10
+tab_size = 15
 vertical_alignment = 1
 
 [node name="Background" type="Sprite2D" parent="." unique_id=668148586]
-visible = false
 show_behind_parent = true
 light_mask = 2
 visibility_layer = 2

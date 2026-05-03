@@ -14,7 +14,6 @@ script = ExtResource("1_le7vc")
 
 [node name="Song1" type="AudioStreamPlayer2D" parent="." unique_id=305929359]
 stream = ExtResource("2_i31bd")
-pitch_scale = 0.78
 
 [node name="CardDraw" type="AudioStreamPlayer2D" parent="." unique_id=1633172754]
 stream = ExtResource("3_jqw5m")
@@ -32,6 +31,7 @@ stream = ExtResource("6_jd2od")
 
 [node name="Damage" type="AudioStreamPlayer2D" parent="." unique_id=284060130]
 stream = ExtResource("7_n137f")
+volume_db = 1.0
 
 [node name="ButtonSelect" type="AudioStreamPlayer2D" parent="." unique_id=540292330]
 stream = ExtResource("8_h25h8")

@@ -2,6 +2,7 @@ extends Node2D
 const CARD_BACK_PATH = "res://Assets/Cards/test.png"
 const CARD_SCENE_PATH = 'res://Scenes/Card.tscn'
 var card_database_reference
+@onready var game_manager_reference = $"../GameManager"
 var dealer_hand = []
 var dealer_hidden_card = null #tracks face down cards
 var score_manager_reference  # new because of ScoreManager
@@ -229,12 +230,65 @@ func stand():
 	print("Player stands.")
 	await reveal_dealer_hand()
 	score_manager_reference.update_score_display()
-	run_dealer_logic()
+	await run_dealer_logic()
+	
+'''
+	play_score_breakdown()
+	Walks through the player's hand left-to-right, showing each card's
+    value and the running total as staggered floating popups.
+'''
+'''
+    play_score_breakdown()
+    Animates score popups for both hands sequentially.
+    Player cards pop upward (-1), dealer cards pop downward (+1).
+    Both hands stagger at the same time — they run in parallel.
+'''
+func play_score_breakdown() -> void:
+	var player_hand = $"../PlayerHand".hand
+	const STAGGER := 0.45
+
+	# --- Helper: animate one hand and return total wait time ---
+	# We call this inline for both hands
+	var _animate_hand = func(hand: Array, direction: int) -> float:
+		var cumulative := 0
+		var display_aces := 0
+		var stagger := 0.0
+		for card in hand:
+			if card.is_face_down or card.card_data.get("value", 0) == 0:
+				stagger += STAGGER
+				continue
+			var v: int = card.card_data.get("value", 0)
+			cumulative += v
+			if card.card_data.get("name", "") == "Ace":
+				display_aces += 1
+			# Soften running total for display
+			var display_total := cumulative
+			var soft_aces := display_aces
+			while display_total > 21 and soft_aces > 0:
+				display_total -= 10
+				soft_aces -= 1
+			card.show_score_breakdown(v, display_total, stagger, direction)
+			stagger += STAGGER
+		return stagger
+
+	var player_wait = _animate_hand.call(player_hand, -1)   # above card
+	var dealer_wait = _animate_hand.call(dealer_hand, 1)    # below card
+	var total_wait = max(player_wait, dealer_wait) + 1.5
+	await get_tree().create_timer(total_wait).timeout
 	
 func run_dealer_logic():
+	const wait_time = .5
+	if game_manager_reference.dealer_frozen:  # High Priestess skips dealer draw entirely
+		game_manager_reference.dealer_frozen = false
+		score_manager_reference.update_score_display()
+		score_manager_reference.determine_winner()
+		return
 	while score_manager_reference.calculate_score(dealer_hand) < 17:
+		await get_tree().create_timer(wait_time).timeout
 		draw_card_to_dealer(false) #face up
 	score_manager_reference.update_score_display()
+	await get_tree().create_timer(wait_time).timeout      # brief pause before winner is called
+	await play_score_breakdown()   # ← NEW: show the calculation sequence
 	score_manager_reference.determine_winner()
 	
 # clear table is the next state when we finish a round
