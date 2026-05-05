@@ -158,10 +158,12 @@ func end_round(result: String):
 
 	match effective_result:
 		"player_wins":
+			AudioController.play_round_won()
 			player_years += current_wager
 			result_label.text = "You gain %d years! Total: %d" % [current_wager, player_years]
 		"dealer_wins":
 			if skip_next_bust:
+				AudioController.play_tarot_save()
 				skip_next_bust = false
 				result_label.text = "The Fool protects you! Total: %d" % player_years
 			elif half_loss_on_bust:
@@ -171,6 +173,7 @@ func end_round(result: String):
 				half_loss_on_bust = false
 				result_label.text = "Temperance softens the blow — lose %d years. Total: %d" % [loss, player_years]
 			elif restore_on_loss:
+				AudioController.play_tarot_save()
 				restore_on_loss = false
 				player_years = _years_at_round_start
 				result_label.text = "Judgement restores your years. Total: %d" % player_years
@@ -220,17 +223,19 @@ func check_game_over():
 	else:
 		state = GameState.BETTING
 		
-		# we wait for 1.5 seconds for the next round
+		# we wait for 3.5 seconds for the next round
 		await get_tree().create_timer(3.5).timeout
 		advance_to_next_round()
 
 func advance_to_next_round():
+	AudioController.play_card_shuffle()
 	score_manager_reference.reset_score_colors()
 	deck_reference.clear_table()
 	current_round += 1
 	current_wager = 0
 	state = GameState.BETTING
 	result_label.text = "Awaiting player wager..."
+	
 	update_wager_display()
 
 func restart():

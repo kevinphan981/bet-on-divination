@@ -30,3 +30,16 @@ func play_card_shuffle():
 func play_damage():
 	if not mute:
 		$Damage.play()
+		
+func play_round_won():
+	if not mute:
+		$RoundWon.play()
+	
+func play_push():
+	if not mute:
+		pass
+
+func play_tarot_save():
+	if not mute:
+		pass
+		

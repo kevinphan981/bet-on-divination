@@ -3,13 +3,6 @@
 [ext_resource type="Theme" uid="uid://c06og6q5xpc4h" path="res://MainTheme.tres" id="1_853f1"]
 [ext_resource type="Script" uid="uid://sfhy6nkhkecn" path="res://Scripts/MainMenu.gd" id="1_tt5f1"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bnhvo"]
-corner_radius_top_left = 10
-corner_radius_top_right = 10
-corner_radius_bottom_right = 10
-corner_radius_bottom_left = 10
-shadow_size = 5
-
 [sub_resource type="CompressedTexture2D" id="CompressedTexture2D_853f1"]
 load_path = "res://.godot/imported/yggdrasil-tree-background.png-56de6c6149e21d6e0f69a2e14b1685d3.ctex"
 
@@ -37,21 +30,18 @@ offset_right = 132.0
 offset_bottom = 205.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/separation = 25
+theme_override_constants/separation = 35
 
 [node name="StartButton" type="Button" parent="VBoxContainer" unique_id=1063685404]
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_bnhvo")
 text = "Start Game"
 
 [node name="OptionsButton" type="Button" parent="VBoxContainer" unique_id=1991889068]
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_bnhvo")
 text = "Options"
 
 [node name="ExitButton" type="Button" parent="VBoxContainer" unique_id=652419328]
 layout_mode = 2
-theme_override_styles/normal = SubResource("StyleBoxFlat_bnhvo")
 text = "Exit"
 
 [node name="Title" type="Label" parent="." unique_id=483442732]

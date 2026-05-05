@@ -3,27 +3,40 @@
 [ext_resource type="FontFile" uid="uid://77mgrtwhhb08" path="res://Assets/Tarot-Related/Golden Type ITC Std Regular.otf" id="1_4as0w"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_4as0w"]
-content_margin_top = 20.0
-content_margin_bottom = 20.0
+content_margin_top = 5.0
+content_margin_bottom = 5.0
 bg_color = Color(0.2, 0.2, 0.2, 1)
+expand_margin_top = 15.0
+expand_margin_bottom = 15.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_yhag5"]
+content_margin_top = 5.0
+content_margin_bottom = 5.0
 bg_color = Color(0.23753911, 0.23753914, 0.23753902, 1)
-expand_margin_top = 20.0
-expand_margin_bottom = 20.0
+border_width_left = 5
+border_width_top = 5
+border_width_right = 5
+border_width_bottom = 5
+expand_margin_top = 15.0
+expand_margin_bottom = 15.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_rfn4m"]
+content_margin_top = 5.0
+content_margin_bottom = 5.0
 bg_color = Color(0.29035345, 0.2903535, 0.29035333, 1)
-expand_margin_top = 20.0
-expand_margin_bottom = 20.0
+expand_margin_top = 15.0
+expand_margin_bottom = 15.0
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_u23kh"]
-expand_margin_top = 20.0
-expand_margin_bottom = 20.0
+content_margin_top = 5.0
+content_margin_bottom = 5.0
+expand_margin_top = 15.0
+expand_margin_bottom = 15.0
 
 [resource]
 default_font = ExtResource("1_4as0w")
 default_font_size = 42
+Button/constants/h_separation = 0
 Button/styles/disabled = SubResource("StyleBoxFlat_4as0w")
 Button/styles/hover = SubResource("StyleBoxFlat_yhag5")
 Button/styles/normal = SubResource("StyleBoxFlat_rfn4m")

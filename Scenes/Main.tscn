@@ -168,6 +168,7 @@ horizontal_alignment = 1
 [node name="WagerUpButton" type="Button" parent="CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer" unique_id=1365185249]
 layout_mode = 2
 text = " More Funds +  "
+autowrap_mode = 2
 
 [node name="WagerDownButton" type="Button" parent="CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer" unique_id=1795990114]
 layout_mode = 2
@@ -185,6 +186,12 @@ text = "Stand"
 [node name="HitButton" type="Button" parent="CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer" unique_id=495087887]
 layout_mode = 2
 text = "Hit"
+icon_alignment = 1
+expand_icon = true
+
+[node name="HSeparator" type="HSeparator" parent="CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer" unique_id=1636743961]
+custom_minimum_size = Vector2(0, 20)
+layout_mode = 2
 
 [node name="Label" type="Label" parent="CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer" unique_id=589618487]
 layout_mode = 2
@@ -212,13 +219,23 @@ autowrap_mode = 2
 tab_size = 15
 vertical_alignment = 1
 
-[node name="Background" type="Sprite2D" parent="." unique_id=668148586]
+[node name="Background" type="TextureRect" parent="." unique_id=739270234]
 show_behind_parent = true
 light_mask = 2
 visibility_layer = 2
 z_index = -10
-position = Vector2(961, 539)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -2400.0
+offset_top = -1600.0
+offset_right = 2400.0
+offset_bottom = 1600.0
+grow_horizontal = 2
+grow_vertical = 2
 scale = Vector2(0.4, 0.4)
+size_flags_horizontal = 3
+size_flags_vertical = 3
 texture = ExtResource("13_1p5hy")
 
 [connection signal="pressed" from="CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer/WagerUpButton" to="GameManager" method="_on_wager_up_button_pressed"]

@@ -8,6 +8,8 @@
 [ext_resource type="AudioStream" uid="uid://c586tr1ndlswv" path="res://Assets/Sounds/Buff/GP_Heal_1.wav" id="6_jd2od"]
 [ext_resource type="AudioStream" uid="uid://dyayfrtay8fy6" path="res://Assets/Sounds/Damage/GP_Damage_5.wav" id="7_n137f"]
 [ext_resource type="AudioStream" uid="uid://b2g0bjj5ckkem" path="res://Assets/Sounds/UI/UI_Select_1.wav" id="8_h25h8"]
+[ext_resource type="AudioStream" uid="uid://bnt28tche8qkn" path="res://Assets/Sounds/Buff/dragon-studio-game-show-correct-tick-sound-416167.mp3" id="9_h25h8"]
+[ext_resource type="AudioStream" uid="uid://d1dcl40t16py1" path="res://Assets/Sounds/Buff/GP_Armor_Up_1.wav" id="10_4spl0"]
 
 [node name="AudioController" type="Node2D" unique_id=974052460]
 script = ExtResource("1_le7vc")
@@ -35,3 +37,11 @@ volume_db = 1.0
 
 [node name="ButtonSelect" type="AudioStreamPlayer2D" parent="." unique_id=540292330]
 stream = ExtResource("8_h25h8")
+
+[node name="RoundWon" type="AudioStreamPlayer2D" parent="." unique_id=757358460]
+stream = ExtResource("9_h25h8")
+
+[node name="TarotSave" type="AudioStreamPlayer2D" parent="." unique_id=381200203]
+stream = ExtResource("10_4spl0")
+
+[node name="RoundDraw" type="AudioStreamPlayer2D" parent="." unique_id=668070575]
