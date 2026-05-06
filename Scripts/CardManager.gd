@@ -40,10 +40,10 @@ func _process(_delta: float) -> void:
 '''
 func start_drag(card):
 	card_being_dragged = card
-	card.scale = Vector2(1.0, 1.0)
+	card.scale = card.base_scale  # ← was Vector2(1.0, 1.0)
 
 func finish_drag():
-	card_being_dragged.scale = Vector2(1.05, 1.05)
+	card_being_dragged.scale = card_being_dragged.base_scale * 1.05  # ← was Vector2(1.05, 1.05)
 	var card_slot_found = raycast_check_for_card_slot()
 	if card_slot_found and not card_slot_found.card_in_slot:
 		player_hand_reference.remove_card_from_hand(card_being_dragged)
@@ -68,11 +68,15 @@ func connect_card_signals(card):
 
 # most basic functions to describe it
 func on_hovered_over_card(card):
+	print("=== HOVER ===")
+	print("card.scale before: ", card.scale)
+	print("card.base_scale: ", card.base_scale)
 	if card_being_dragged:
 		highlight_card(card, false)
 	if !is_hovering_on_card:
 		is_hovering_on_card = true
 		highlight_card(card, true)
+	print("card.scale after: ", card.scale)
 
 	if card.card_data.get("is_tarot", false):
 		_showing_card_desc = true
@@ -102,11 +106,12 @@ func on_hovered_off_card(card):
 
 	
 func highlight_card(card, hovered):
+	print("highlight_card called — hovered=", hovered, " base_scale=", card.base_scale)
 	if hovered:
-		card.scale = Vector2(1.05, 1.05) # makes slightly bigger
+		card.scale = card.base_scale * 1.05
 		card.z_index = 2 # puts card in front of others
 	else:
-		card.scale = Vector2(1, 1) # makes slightly bigger
+		card.scale = card.base_scale
 		card.z_index = 1 # puts card in front of others
 
 func raycast_check_for_card_slot():

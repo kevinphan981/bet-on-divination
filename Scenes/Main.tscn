@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://cj44ipdv8amgl"]
 
 [ext_resource type="Script" uid="uid://kkr3u7j1x0bf" path="res://Scripts/CardManager.gd" id="1_kln2b"]
-[ext_resource type="PackedScene" uid="uid://ccbat7p4yfpkj" path="res://Scenes/CardSlot.tscn" id="2_rgh2o"]
 [ext_resource type="Script" uid="uid://csijj676vy7oo" path="res://Scripts/PlayerHand.gd" id="3_pbw6q"]
 [ext_resource type="Script" uid="uid://cftmavb1wrcbv" path="res://Scripts/Deck.gd" id="4_pbw6q"]
 [ext_resource type="Texture2D" uid="uid://5ky4k553ju82" path="res://Assets/Cards/test.png" id="4_rgh2o"]
@@ -12,7 +11,7 @@
 [ext_resource type="Script" uid="uid://bkbn073n0btxq" path="res://Scripts/ScoreManager.gd" id="11_4kpch"]
 [ext_resource type="Theme" uid="uid://c06og6q5xpc4h" path="res://MainTheme.tres" id="11_frkhe"]
 [ext_resource type="Script" uid="uid://efe7t8cg66n2" path="res://Scripts/TarotManager.gd" id="12_grg3l"]
-[ext_resource type="Texture2D" uid="uid://dn063klimk18g" path="res://Assets/Tarot-Related/wooden-table-bg2.jpg" id="13_1p5hy"]
+[ext_resource type="Texture2D" uid="uid://dul1cu6s7b7jp" path="res://Assets/Tarot-Related/vecteezy_islamic-background-vector-graphics-with-arabic-mandala_7142947.svg" id="13_frkhe"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_r0du0"]
 size = Vector2(158, 222)
@@ -35,15 +34,10 @@ script = ExtResource("11_4kpch")
 [node name="CardManager" type="Node2D" parent="." unique_id=1636810811]
 script = ExtResource("1_kln2b")
 
-[node name="CardSlot" parent="." unique_id=1774103265 instance=ExtResource("2_rgh2o")]
-visible = false
-position = Vector2(1664, 539)
-
 [node name="PlayerHand" type="Node2D" parent="." unique_id=1457863070]
 script = ExtResource("3_pbw6q")
 
 [node name="Deck" type="Node2D" parent="." unique_id=1600404299]
-visible = false
 position = Vector2(200, 550)
 script = ExtResource("4_pbw6q")
 
@@ -67,7 +61,6 @@ script = ExtResource("6_v1gob")
 script = ExtResource("7_jw32o")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1378948312]
-layer = 10
 
 [node name="MainUI" type="Control" parent="CanvasLayer" unique_id=1677420587]
 custom_minimum_size = Vector2(1920, 1080)
@@ -219,24 +212,27 @@ autowrap_mode = 2
 tab_size = 15
 vertical_alignment = 1
 
-[node name="Background" type="TextureRect" parent="." unique_id=739270234]
+[node name="CanvasLayer2" type="CanvasLayer" parent="." unique_id=1635201559]
+layer = -2
+
+[node name="Background" type="TextureRect" parent="CanvasLayer2" unique_id=739270234]
+modulate = Color(0.9137255, 0.9137255, 0.9137255, 1)
 show_behind_parent = true
-light_mask = 2
-visibility_layer = 2
-z_index = -10
+light_mask = 524288
+visibility_layer = 524288
+z_index = -20
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_left = -2400.0
-offset_top = -1600.0
-offset_right = 2400.0
-offset_bottom = 1600.0
 grow_horizontal = 2
 grow_vertical = 2
-scale = Vector2(0.4, 0.4)
 size_flags_horizontal = 3
 size_flags_vertical = 3
-texture = ExtResource("13_1p5hy")
+size_flags_stretch_ratio = 100.0
+mouse_filter = 2
+mouse_behavior_recursive = 1
+texture = ExtResource("13_frkhe")
+expand_mode = 3
 
 [connection signal="pressed" from="CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer/WagerUpButton" to="GameManager" method="_on_wager_up_button_pressed"]
 [connection signal="pressed" from="CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer/WagerDownButton" to="GameManager" method="_on_wager_down_button_pressed"]

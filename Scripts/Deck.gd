@@ -10,8 +10,12 @@ var score_manager_reference  # new because of ScoreManager
 @onready var stand_button = $"../CanvasLayer/MainUI/SidePanel/MarginContainer/VBoxContainer/StandButton"
 @onready var result_label = $"../CanvasLayer/MainUI/ResultLabel"
 const MAX_HAND_SIZE = 5 # subject to change, 7 based on google search
-const DEALER_Y_POSITION = 200
-const PLAYER_Y_POSITION = 900
+
+# AFTER
+const DEALER_Y_RATIO = 0.18  # dealer at 18% from top
+const PLAYER_Y_RATIO = 0.85  # player at 85% from top
+
+const CARD_OVERLAP_RATIO = 1.2  #"tuning knob". 0.7 = slight overlap, 1.0 = no overlap
 
 #const CardScript = preload("res://Scripts/Card.gd")  # adjust path as needed
 
@@ -19,7 +23,6 @@ const PLAYER_Y_POSITION = 900
 # Delay between each dealer card flip during the reveal (seconds)
 const FLIP_DELAY = 0.45
 const DEAL_DELAY = 0.35  # tune this to match your flip speed
-
 
 
 #signal hit
@@ -35,8 +38,13 @@ func _ready() -> void:
 	#deal_initial_hand()
 	#print(get_parent().get_children())  # see what nodes are actually at that level
    
-
 	#pass # Replace with function body.
+	
+func get_dealer_y() -> float:
+	return get_viewport().size.y * DEALER_Y_RATIO
+
+func get_player_y() -> float:
+	return get_viewport().size.y * PLAYER_Y_RATIO
 
 func deal_initial_hand():
 	print("Initial hands dealt")
@@ -58,6 +66,7 @@ func deal_initial_hand():
 '''
 
 func draw_card_to_player():
+	print("-------calling draw_card_to_player------")
 	## wait a moment
 	#await get_tree().create_timer(DEAL_DELAY).timeout
 	
@@ -72,7 +81,7 @@ func draw_card_to_player():
 		print("ERROR: card_data is empty!")
 		return
 	
-	var new_card = create_card(card_data, PLAYER_Y_POSITION)
+	var new_card = create_card(card_data, get_player_y())
 	
 	# we draw the card physically
 	$"../PlayerHand".add_card_to_hand(new_card)
@@ -94,7 +103,7 @@ func draw_card_to_player():
 func draw_card_to_dealer(face_down: bool):
 
 	var card_data = CardDatabase.draw_card_db()
-	var new_card = create_card(card_data, DEALER_Y_POSITION)
+	var new_card = create_card(card_data, get_dealer_y())
 	AudioController.play_card_draw()
 	if face_down:
 		new_card.get_node("Sprite2D").texture = load(CARD_BACK_PATH)
@@ -140,11 +149,13 @@ func create_card(card_data, dest_y: float) -> Node:
 	$"../CardManager".add_child(new_card)
 	new_card.card_data = card_data
 
+
 	if card_data.get("is_tarot", false):
 		new_card.connect("tarot_activated", $"../TarotManager".execute_power)
 
 	new_card.name = "Card"
 	new_card.get_node("Sprite2D").texture = load(card_data.texture_path)
+	new_card._apply_screen_scale()
 
 	# Start above the destination and slide down to it
 	var center_x = get_viewport().size.x / 2
@@ -159,7 +170,6 @@ func create_card(card_data, dest_y: float) -> Node:
 	DealerHand in itself seems too much for this, just use some things here to make the dealer
 '''
 
-const CARD_OVERLAP_RATIO = 0.6  #"tuning knob". 0.7 = slight overlap, 1.0 = no overlap
 
 func get_dealer_card_step() -> float:
 	if dealer_hand.is_empty():
@@ -176,7 +186,7 @@ func update_dealer_positions():
 	var total_width = (dealer_hand.size() - 1) * step
 	var start_x = center - total_width / 2
 	for i in range(dealer_hand.size()):
-		var pos = Vector2(start_x + i * step, DEALER_Y_POSITION)
+		var pos = Vector2(start_x + i * step, get_dealer_y())
 		var tween = get_tree().create_tween()  
 		tween.tween_property(dealer_hand[i], "position", pos, 0.1)
 		

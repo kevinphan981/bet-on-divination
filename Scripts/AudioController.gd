@@ -41,5 +41,5 @@ func play_push():
 
 func play_tarot_save():
 	if not mute:
-		pass
+		$TarotSave.play()
 		

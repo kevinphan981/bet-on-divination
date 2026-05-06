@@ -61,12 +61,19 @@ theme_override_font_sizes/font_size = 128
 text = "Bet on Divination"
 horizontal_alignment = 1
 
-[node name="TitleBackground" type="Sprite2D" parent="." unique_id=2112622162]
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2143713543]
+layer = -1
+
+[node name="TitleBackground" type="TextureRect" parent="CanvasLayer" unique_id=1893513129]
 modulate = Color(1, 1, 1, 0.5254902)
 light_mask = 512
 visibility_layer = 512
 z_index = -10
-position = Vector2(962.5, 546)
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
 scale = Vector2(0.9994792, 1.0037174)
 texture = SubResource("CompressedTexture2D_853f1")
 

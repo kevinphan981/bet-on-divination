@@ -8,6 +8,10 @@ signal card_selected(card)  # fired when a non-tarot card is clicked (used by re
 var position_in_hand
 var card_data = {}
 var is_face_down = false
+var base_scale := Vector2(1, 1)  # ← NEW: set by Deck after texture loads
+
+const TARGET_CARD_HEIGHT_RATIO = 0.25  # card = 25% of screen height
+
 
 func _ready() -> void:
 	get_parent().connect_card_signals(self)
@@ -15,7 +19,18 @@ func _ready() -> void:
 	for child in get_children():
 		print("Child: ", child.name, " | Type: ", child.get_class())
 
-
+func _apply_screen_scale() -> void:
+	print("-----calling apply_screen_scale--------")
+	var sprite: Sprite2D = get_node("Sprite2D")
+	if sprite.texture == null:
+		return
+	var screen_h = get_viewport().size.y
+	var target_h = screen_h * TARGET_CARD_HEIGHT_RATIO
+	var tex_h = sprite.texture.get_height()
+	var s = target_h / tex_h
+	base_scale = Vector2(s, s)  # ← "var" makes this a LOCAL variable
+	scale = Vector2(s, s)
+	
 func _on_area_2d_mouse_entered() -> void:
 	emit_signal("hovered", self)
 
@@ -55,8 +70,7 @@ func play_tarot_activation() -> void:
 
 	# Slight scale pop
 	shimmer.tween_property(self, "scale",
-		Vector2(1.18, 1.18), 0.12)\
-		.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+		base_scale * 1.18, 0.12).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
 
 	await shimmer.finished
 
@@ -69,8 +83,7 @@ func play_tarot_activation() -> void:
 	var dissolve = create_tween()
 	dissolve.set_parallel(true)
 	dissolve.tween_property(self, "scale",
-		Vector2(1.4, 1.4), 0.45)\
-		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
+		base_scale * 1.4, 0.45).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	dissolve.tween_property(self, "rotation_degrees",
 		12.0, 0.45)\
 		.set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
@@ -82,7 +95,7 @@ func play_tarot_activation() -> void:
 	# Reset visual state so the card doesn't leave a ghost if something
 	# goes wrong with queue_free() timing
 	sprite.modulate = Color(1, 1, 1, 1)
-	self.scale      = Vector2(1, 1)
+	self.scale = base_scale               # ← was Vector2(1, 1)
 	self.rotation_degrees = 0.0
 
 
@@ -140,7 +153,7 @@ func flip_face_up() -> void:
 
 	# Phase 1: squish to zero on x-axis (fold inward)
 	var tween = create_tween()
-	tween.tween_property(sprite, "scale:x", 0.0, 0.18)\
+	tween.tween_property(self, "scale:x", 0.0, 0.18)\
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN)
 	await tween.finished
 
@@ -150,7 +163,7 @@ func flip_face_up() -> void:
 
 	# Phase 2: expand back out
 	var tween2 = create_tween()
-	tween2.tween_property(sprite, "scale:x", .45, 0.45)\
+	tween2.tween_property(self, "scale:x", base_scale.x, 0.18)\
 		.set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
 	await tween2.finished
 
@@ -167,13 +180,16 @@ func show_value_popup(value: int) -> void:
 	label.text    = "+%d" % value
 	label.z_index = 10
 
+	var inv = 1.0 / base_scale.x
+	label.scale = Vector2(inv, inv)
+	
 	var font_size = 56
 	label.add_theme_font_size_override("font_size", font_size)
 	label.add_theme_color_override("font_color",         Color(1.0, 0.5, 0.3))
 	label.add_theme_color_override("font_outline_color", Color(0.1, 0.05, 0.0))
 	label.add_theme_constant_override("outline_size", 4)
 
-	label.position = Vector2(-20, -80)
+	label.position = Vector2(-20, -80) * inv  # push it above the card in card-local space
 	add_child(label)
 
 	var tween = create_tween()
@@ -192,25 +208,39 @@ func show_value_popup(value: int) -> void:
 # ─────────────────────────────────────────────────────────────────────────────
 func show_score_breakdown(value: int, running_total: int, delay: float = 0.0, popup_direction: int = -1) -> void:
 	if value <= 0:
-		return  # skip tarot cards
+		return
 
 	await get_tree().create_timer(delay).timeout
 
 	var sprite = get_node("Sprite2D")
-	var card_half_height = sprite.texture.get_height() * sprite.scale.y * 0.5
-	var base_y = card_half_height * popup_direction
+	var inv = 1.0 / base_scale.x  # ← add this
 
+	var card_half_height = sprite.texture.get_height()  * 0.5 * self.scale.y
+	
+	'''
+		there are two separate values here, the label_height_offset exclusively to be subtracted for dealer
+		and then the +30 we do in order to push the cards up/down to avoid clipping.
+	'''
+	
+	var label_height_offset = 45  # approximate label height in screen pixels, adjust to taste
+
+	var base_y = (card_half_height+30)* popup_direction * inv
+
+	if popup_direction == 1:
+		base_y -= label_height_offset * inv  # nudge up to account for label anchor
+	
 	var value_label = Label.new()
 	value_label.text = "+%d" % value
 	value_label.z_index = 15
+	value_label.scale = Vector2(inv, inv)  # ← compensate
 	value_label.add_theme_font_size_override("font_size", 52)
 	value_label.add_theme_color_override("font_color",         Color(1.0, 0.85, 0.3))
 	value_label.add_theme_color_override("font_outline_color", Color(0.1, 0.05, 0.0))
 	value_label.add_theme_constant_override("outline_size", 5)
-	value_label.position = Vector2(-24, base_y)
+	value_label.position = Vector2(-24 * inv, base_y)  # ← scale offset too
 	add_child(value_label)
 
-	var float_distance = 55 * popup_direction
+	var float_distance = (get_viewport().size.y * 0.06) * popup_direction * inv  # ← scale travel distance
 
 	var t1 = create_tween()
 	t1.set_parallel(true)

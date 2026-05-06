@@ -2,17 +2,23 @@ extends Node2D
 
 const CARD_SCENE_PATH = 'res://Scenes/Card.tscn'
 const CARD_WIDTH = 250 #literally play with this to see what fits
-const HAND_Y_POSITION = 900
+#const HAND_Y_POSITION = 900
+const HAND_Y_RATIO = 0.85  # player hand sits at 85% down the screen
 #const DEALER_Y_POSITION = 200
 var hand = []
 var center_screen_x
+
+const CARD_OVERLAP_RATIO = 1.2  #"tuning knob". 0.7 = slight overlap, 1.0 = no overlap
+
 
 # Called when the node enters the scene tree for the first time.
 
 func _ready() -> void:
 	center_screen_x = get_viewport().size.x/2 # get the center of the screen
 
-
+func get_hand_y() -> float:
+	return get_viewport().size.y * HAND_Y_RATIO
+	
 func add_card_to_hand(card):
 	if card not in hand:
 		hand.insert(0, card)
@@ -24,9 +30,10 @@ func add_card_to_hand(card):
 func update_hand_positions():
 	for i in range(hand.size()):
 		# for new card's position based on index
-		var new_position = Vector2(calculate_card_position(i), HAND_Y_POSITION)
+		var new_position = Vector2(calculate_card_position(i), get_hand_y())
 		var card = hand[i]
 		card.position_in_hand = new_position
+		print("Card ", i, " assigned x=", new_position.x)
 		animate_card_to_position(card, new_position)
 	
 '''
@@ -35,7 +42,6 @@ start_x is the left edge of the entire hand — it shifts left from center by ha
 x_offset then steps each card rightward by CARD_WIDTH from that starting point
 '''
 
-const CARD_OVERLAP_RATIO = 0.6  #"tuning knob". 0.7 = slight overlap, 1.0 = no overlap
 
 func get_card_step() -> float:
 	if hand.is_empty():
@@ -43,6 +49,10 @@ func get_card_step() -> float:
 	var card = hand[0]
 	var texture = card.get_node("Sprite2D").texture  # adjust node name if yours differs
 	print("Player card width: ", texture.get_width())
+	print("card.scale.x: ", card.scale.x)          # ← add this
+	print("card.base_scale.x: ", card.base_scale.x) # ← add this
+	print("step = ", texture.get_width(), " * ", card.scale.x, " * ", CARD_OVERLAP_RATIO, " = ", texture.get_width() * card.scale.x * CARD_OVERLAP_RATIO)
+	print("hand size at step calc: ", hand.size())
 	return texture.get_width() * card.scale.x * CARD_OVERLAP_RATIO
 	
 	

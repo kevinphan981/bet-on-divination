@@ -107,7 +107,7 @@ func execute_power(card):
 		"extra_hit":
 			# Bypasses MAX_HAND_SIZE intentionally
 			var card_data = CardDatabase.draw_card_for_player()
-			var new_card = deck.create_card(card_data, deck.PLAYER_Y_POSITION)
+			var new_card = deck.create_card(card_data, deck.get_player_y())
 			player_hand.add_card_to_hand(new_card)
 			new_card.show_value_popup(card_data.get("value", 0))
 			score_manager.update_score_display()
