@@ -151,8 +151,8 @@ func _force_dealer_bust():
 	var attempts := 0
 	while calculate_score(deck_reference.dealer_hand) <= 21 and attempts < max_attempts:
 		deck_reference.draw_card_to_dealer(false)
-		determine_winner()
 		print("dealer_bust: dealer score is now ", calculate_score(deck_reference.dealer_hand))
+		determine_winner()
 		attempts += 1
 
 #---------------------------------------------------

@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="bet-on-divination"
-run/main_scene="uid://btd2b7f2w0n7y"
+run/main_scene="uid://cj44ipdv8amgl"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://Assets/Cards/icon.svg"
 

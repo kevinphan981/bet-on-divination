@@ -37,7 +37,7 @@ func play_round_won():
 	
 func play_push():
 	if not mute:
-		pass
+		$RoundDraw.play()
 
 func play_tarot_save():
 	if not mute:

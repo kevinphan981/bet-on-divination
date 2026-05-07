@@ -31,6 +31,11 @@ func _apply_screen_scale() -> void:
 	base_scale = Vector2(s, s)  # ← "var" makes this a LOCAL variable
 	scale = Vector2(s, s)
 	
+	# Resize collision shape to match texture exactly
+	var collision = get_node("Area2D/CollisionShape2D")
+	if collision and collision.shape is RectangleShape2D:
+		collision.shape.size = Vector2(sprite.texture.get_width(), sprite.texture.get_height())
+	
 func _on_area_2d_mouse_entered() -> void:
 	emit_signal("hovered", self)
 

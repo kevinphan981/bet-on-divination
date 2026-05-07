@@ -182,6 +182,7 @@ func end_round(result: String):
 				AudioController.play_damage()
 				result_label.text = "You lose %d years. Total: %d" % [current_wager, player_years]
 		"push":
+			AudioController.play_push()
 			result_label.text = "Push! Your %d years are returned." % current_wager
 
 	if player_years <= 0 and is_protected_from_death:

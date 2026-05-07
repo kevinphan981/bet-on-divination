@@ -1,5 +1,5 @@
 extends Node2D
-const CARD_BACK_PATH = "res://Assets/Cards/test.png"
+const CARD_BACK_PATH = "res://Assets/Cards/CardBack-3.png"
 const CARD_SCENE_PATH = 'res://Scenes/Card.tscn'
 var card_database_reference
 @onready var game_manager_reference = $"../GameManager"

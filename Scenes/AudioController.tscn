@@ -10,13 +10,13 @@
 [ext_resource type="AudioStream" uid="uid://b2g0bjj5ckkem" path="res://Assets/Sounds/UI/UI_Select_1.wav" id="8_h25h8"]
 [ext_resource type="AudioStream" uid="uid://bnt28tche8qkn" path="res://Assets/Sounds/Buff/dragon-studio-game-show-correct-tick-sound-416167.mp3" id="9_h25h8"]
 [ext_resource type="AudioStream" uid="uid://d1dcl40t16py1" path="res://Assets/Sounds/Buff/GP_Armor_Up_1.wav" id="10_4spl0"]
+[ext_resource type="AudioStream" uid="uid://d1evy4ct8yr85" path="res://Assets/Sounds/Debuff/GP_Armor_Down_1.wav" id="11_ya5ei"]
 
 [node name="AudioController" type="Node2D" unique_id=974052460]
 script = ExtResource("1_le7vc")
 
 [node name="Song1" type="AudioStreamPlayer2D" parent="." unique_id=305929359]
 stream = ExtResource("2_i31bd")
-volume_db = -80.0
 
 [node name="CardDraw" type="AudioStreamPlayer2D" parent="." unique_id=1633172754]
 stream = ExtResource("3_jqw5m")
@@ -47,3 +47,4 @@ stream = ExtResource("10_4spl0")
 volume_db = 2.0
 
 [node name="RoundDraw" type="AudioStreamPlayer2D" parent="." unique_id=668070575]
+stream = ExtResource("11_ya5ei")
