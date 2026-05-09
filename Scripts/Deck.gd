@@ -27,7 +27,7 @@ const DEAL_DELAY = 0.35  # tune this to match your flip speed
 
 #signal hit
 
-# Called when the node enters the scene tree for the first time.
+# Called when the node enters the scene tree the first time.
 func _ready() -> void:
 	#print($Area2D.collision_mask)
 	# meant to connect the signal to the actual function
@@ -148,7 +148,7 @@ func create_card(card_data, dest_y: float) -> Node:
 	var new_card = card_scene.instantiate()
 	$"../CardManager".add_child(new_card)
 	new_card.card_data = card_data
-
+	new_card.player_hand_ref = $"../PlayerHand"
 
 	if card_data.get("is_tarot", false):
 		new_card.connect("tarot_activated", $"../TarotManager".execute_power)

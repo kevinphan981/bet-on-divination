@@ -9,7 +9,7 @@ var position_in_hand
 var card_data = {}
 var is_face_down = false
 var base_scale := Vector2(1, 1)  # ← NEW: set by Deck after texture loads
-
+var player_hand_ref = null
 const TARGET_CARD_HEIGHT_RATIO = 0.25  # card = 25% of screen height
 
 
@@ -45,8 +45,13 @@ func _on_area_2d_mouse_exited() -> void:
 # Called by InputManager on left click
 func on_clicked() -> void:
 	if card_data.get("is_tarot", false):
-		await play_tarot_activation()
 		emit_signal("tarot_activated", self)
+		await play_tarot_activation() 
+		
+		#now we remove the card and clean up
+		if player_hand_ref:
+			player_hand_ref.remove_card_from_hand(self)
+		queue_free()
 	else:
 		emit_signal("card_selected", self)
 
@@ -97,11 +102,11 @@ func play_tarot_activation() -> void:
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 	await dissolve.finished
 
-	# Reset visual state so the card doesn't leave a ghost if something
-	# goes wrong with queue_free() timing
-	sprite.modulate = Color(1, 1, 1, 1)
-	self.scale = base_scale               # ← was Vector2(1, 1)
-	self.rotation_degrees = 0.0
+	## Reset visual state so the card doesn't leave a ghost if something
+	## goes wrong with queue_free() timing
+	#sprite.modulate = Color(1, 1, 1, 1)
+	#self.scale = base_scale               # ← was Vector2(1, 1)
+	#self.rotation_degrees = 0.0
 
 
 # Spawns a single expanding ring that fades out.

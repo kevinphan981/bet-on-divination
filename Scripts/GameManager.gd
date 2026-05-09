@@ -151,11 +151,13 @@ func end_round(result: String):
 	if state == GameState.ROUND_OVER or state == GameState.GAME_OVER:
 		return  # guard against duplicate calls
 
-	# ── Apply tarot modifiers ─────────────────────────────────────────────
+	## ── Apply tarot modifiers ─────────────────────────────────────────────
+	#var effective_result := result
+	#if inverted_scoring and result != "push":
+		#effective_result = "dealer_wins" if result == "player_wins" else "player_wins"
+		# ^^^ flips things when I don't want it to
+		
 	var effective_result := result
-	if inverted_scoring and result != "push":
-		effective_result = "dealer_wins" if result == "player_wins" else "player_wins"
-
 	match effective_result:
 		"player_wins":
 			AudioController.play_round_won()

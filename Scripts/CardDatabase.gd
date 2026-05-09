@@ -1,4 +1,5 @@
 extends Node
+const TAROT_DRAW_CHANCE = 0.75 #change depending on game play
 
 const CARD_DATA = {
 	"Ace": 11,
@@ -46,7 +47,6 @@ const TAROT_DATA = [{ "name": "The Fool",        "power": "skip_bust",     "desc
 	{ "name": "Judgement",       "power": "reveal_all",    "desc": "Reveal all dealer cards immediately." },
 ]
 
-const TAROT_DRAW_CHANCE = 0.25 #change depending on game play
 
 # Full deck of 52 cards as [ {name, suit, value} ]
 var full_deck = []

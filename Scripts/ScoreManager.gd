@@ -134,6 +134,8 @@ func calculate_score(hand: Array) -> int:
 '''
 
 func check_bust():
+	if game_manager_reference.inverted_scoring:
+		return # there is no use for this method
 	var player_score = calculate_score(player_hand_reference.hand)
 	if player_score > 21:
 		print("Player Bust")
@@ -144,16 +146,19 @@ func check_bust():
 # Helper: force the dealer's hand score above 21 by adding high-value cards.
 # Directly manipulates the dealer hand; adjust field names to match your Deck.
 # ---------------------------------------------------------------------------
-func _force_dealer_bust():
+func _force_dealer_bust() -> void:
 	# Keep drawing until the dealer hand is over 21.
 	# We cap at 5 iterations to avoid an infinite loop if scoring breaks.
 	var max_attempts := 5
 	var attempts := 0
 	while calculate_score(deck_reference.dealer_hand) <= 21 and attempts < max_attempts:
-		deck_reference.draw_card_to_dealer(false)
+		await deck_reference.draw_card_to_dealer(false)
 		print("dealer_bust: dealer score is now ", calculate_score(deck_reference.dealer_hand))
-		determine_winner()
 		attempts += 1
+	# we will see if the dealer has busted
+	update_score_display()
+	determine_winner()
+
 
 #---------------------------------------------------
 # update_score_display()

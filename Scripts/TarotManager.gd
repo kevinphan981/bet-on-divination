@@ -16,11 +16,11 @@ func execute_power(card):
 	print("Activating Tarot Power: ", power)
 	AudioController.play_special_card_activate()
 
-	# Remove tarot card from hand before resolving its effect
-	if player_hand.hand.has(card):
-		player_hand.remove_card_from_hand(card)
-	player_hand.update_hand_positions()
-	score_manager.update_score_display()
+	## Remove tarot card from hand before resolving its effect
+	#if player_hand.hand.has(card):
+		#player_hand.remove_card_from_hand(card)
+	#player_hand.update_hand_positions()
+	#score_manager.update_score_display()
 
 	match power:
 
@@ -72,7 +72,6 @@ func execute_power(card):
 		"push_force":
 			GameLog.add("Justice: the round is forced to a push.")
 			game_manager.end_round("push")
-			card.queue_free()
 			return
 
 		"win_force":
@@ -80,7 +79,6 @@ func execute_power(card):
 			if score >= 15:
 				GameLog.add("The Sun: victory forced at %d!" % score)
 				game_manager.end_round("player_wins")
-				card.queue_free()
 				return
 			else:
 				GameLog.add("The Sun: score too low (%d), no effect." % score)
@@ -159,14 +157,12 @@ func execute_power(card):
 			else:
 				GameLog.add("The Hermit: click a card to remove it.")
 				_await_card_removal()
-			card.queue_free()
 			return
 
 		"dealer_bust":
-			score_manager._force_dealer_bust()
+			await score_manager._force_dealer_bust()
 
 	game_manager.update_wager_display()
-	card.queue_free()
 	
 '''
 	Helper: put the game into card-removal selection mode.
