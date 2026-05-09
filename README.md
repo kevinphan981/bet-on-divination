@@ -1,10 +1,11 @@
 # About
 
-This is a little game that I'm working on that is a slight modification of Blackjack. It uses Tarot cards to manipulate the fate of the game by changing the methods of shuffling. 
-And so the player (with a little bit of help), will be able to pseudo-card count and win more games. The ultimate objective of the game is to win $1,000,000, and it will be done though playing Blackjack
+The game is freely available to play on [Itch as Bet on Divination](https://phanta9812.itch.io/bet-on-divination). Warning: Itch.io does require WebGL2, so it may not play on certain browsers like Brave. 
 
-# Note 
-I need to make the player rush, using the amount of years wagered, I can make a timer that is 1.5*wager and with a heart beat it can rush the player into making a decision.
+This is a little game that I'm working on that is a slight modification of Blackjack. It uses Tarot cards to manipulate the fate of the game by giving the player superpowers over the dealer. Of course, it's Blackjack, the game may not always go your way. 
+
+There are some minor bugs and things I need to fix, but as far as I'm concerned, this is a good draft to leave behind for a while as I move onto different products. 
+
 
 # Disclaimer on Asset Usage
-As a disclaimer, I do use assets that were freely provided which may be under some copyright restriction. Despite this, I do not intend to make a profit and will release the game (if ever done) on Itch.io for free.
+As a disclaimer, I do use assets that were freely provided which may be under some copyright restriction. As far as I know, none of them are actually copyrighted material (all the assets were freely downloadable and are under the Creative Commons License). Regardless, I do not intend to make a profit and will release the game (if ever done) on Itch.io for free.
